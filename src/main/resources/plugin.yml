@@ -1,15 +1,21 @@
-name: Teams
+name: BattleBox
 version: '${project.version}'
-main: io.github.cardsandhuskers.teams.Teams
+main: io.github.cardsandhuskers.battlebox.BattleBox
 api-version: 1.19
-depend: [PlayerPoints, PlaceholderAPI]
+depend: [PlayerPoints, PlaceholderAPI, Teams]
 commands:
-  teamMenu:
-    description: opens the team menu
+  startBattleBox:
+    description: starts the game
     command: /<command>
-  lockTeams:
-    description: prevent changes to teams
+  setBattleboxSpawn:
+    description: sets point where players enter the world
     command: /<command>
-  unlockTeams:
-    description: prevent changes to teams
-    command: /<command>
+  setBattleboxArena:
+    description: sets the center point of the specified arena
+    command: /<command> [arena]
+  setBattleBoxArenaSpawn:
+    description: sets the spawn point for the specified arena and team
+    command: /<command> [arena] [side]
+  setBattleBoxKitSpawn:
+    description: sets the spawn point for the kit selection room for the specified arena and team
+    command: /<command> [arena] [side]
