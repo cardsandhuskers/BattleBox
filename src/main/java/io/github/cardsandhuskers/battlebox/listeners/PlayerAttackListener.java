@@ -1,6 +1,7 @@
 package io.github.cardsandhuskers.battlebox.listeners;
 
 import io.github.cardsandhuskers.battlebox.handlers.PlayerDeathHandler;
+import io.github.cardsandhuskers.battlebox.objects.StoredAttacker;
 import io.github.cardsandhuskers.teams.objects.Team;
 import org.black_ixx.playerpoints.PlayerPointsAPI;
 import org.bukkit.ChatColor;
@@ -11,9 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.Potion;
 
-
-import static io.github.cardsandhuskers.battlebox.BattleBox.handler;
-import static io.github.cardsandhuskers.battlebox.BattleBox.winningTeamsList;
+import static io.github.cardsandhuskers.battlebox.BattleBox.*;
 
 
 public class PlayerAttackListener implements Listener {
@@ -47,13 +46,11 @@ public class PlayerAttackListener implements Listener {
             } else if(e.getDamager().getType() == EntityType.SPLASH_POTION) {
                 ThrownPotion potion = (ThrownPotion) e.getDamager();
                 attacker = (Player) potion.getShooter();
-                System.out.println(attacker);
                 damage(attacker, attacked, e);
             }else {
                 e.setCancelled(true);
             }
         } else {
-            System.out.println("ARROW SHOT");
             e.setCancelled(true);
         }
     }
@@ -76,17 +73,30 @@ public class PlayerAttackListener implements Listener {
                         e.setCancelled(true);
                     }
                 }
+
+                boolean found = false;
+                for(StoredAttacker s: storedAttackers) {
+                    if(s.getAttacked().equals(attacked)) {
+                        found = true;
+                        s.setAttacker(attacker);
+                    }
+                }
+                if(!found) {
+                    StoredAttacker storedAttacker = new StoredAttacker(attacker, attacked);
+                    storedAttackers.add(storedAttacker);
+                }
+
+
                 if (attacked.getHealth() - e.getDamage() <= 0) {
                     //attacked.sendMessage("You Died");
                     e.setCancelled(true);
                     PlayerDeathHandler deathHandler = new PlayerDeathHandler(attacked);
-                    ppAPI.give(attacker.getUniqueId(), 20);
-
-
+                    ppAPI.give(attacker.getUniqueId(), (int)(20 * multiplier));
+                    handler.getPlayerTeam(attacker).addTempPoints(attacker, (int)(20 * multiplier));
 
                     for(Player p: handler.getPlayerTeam(attacker).getOnlinePlayers()) {
                         if(p.equals(attacker)) {
-                            p.sendMessage("[+" + 20 + " points] " + handler.getPlayerTeam(attacked).color + attacked.getName() + ChatColor.RESET + " was killed by " + handler.getPlayerTeam(attacker).color + attacker.getName());
+                            p.sendMessage("[+" + 20 * multiplier + " points] " + handler.getPlayerTeam(attacked).color + attacked.getName() + ChatColor.RESET + " was killed by " + handler.getPlayerTeam(attacker).color + attacker.getName());
                         } else {
                             p.sendMessage(handler.getPlayerTeam(attacked).color + attacked.getName() + ChatColor.RESET + " was killed by " + handler.getPlayerTeam(attacker).color + attacker.getName());
                         }
@@ -97,7 +107,7 @@ public class PlayerAttackListener implements Listener {
 
                     }
                     attacker.playSound(attacker.getLocation(), Sound.ENTITY_LIGHTNING_BOLT_IMPACT, 1f, 2f);
-                    attacker.sendTitle("Killed " + handler.getPlayerTeam(attacked).color + attacked.getName(), "", 2, 20, 2);
+                    attacker.sendTitle("Killed " + handler.getPlayerTeam(attacked).color + attacked.getName(), "", 2, 16, 2);
                 }
             }
         }

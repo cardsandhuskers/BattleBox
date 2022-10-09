@@ -1,9 +1,13 @@
 package io.github.cardsandhuskers.battlebox.commands;
 
 import io.github.cardsandhuskers.battlebox.BattleBox;
+import io.github.cardsandhuskers.battlebox.handlers.ArenaWallHandler;
 import io.github.cardsandhuskers.battlebox.handlers.RoundStartHandler;
 import io.github.cardsandhuskers.battlebox.listeners.*;
 import io.github.cardsandhuskers.battlebox.objects.Countdown;
+import io.github.cardsandhuskers.battlebox.objects.StoredAttacker;
+import io.github.cardsandhuskers.teams.objects.Team;
+import org.apache.commons.lang3.StringUtils;
 import org.black_ixx.playerpoints.PlayerPointsAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -19,9 +23,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.ArrayList;
 
-import static io.github.cardsandhuskers.battlebox.BattleBox.handler;
-import static io.github.cardsandhuskers.battlebox.BattleBox.round;
+import static io.github.cardsandhuskers.battlebox.BattleBox.*;
 import static org.bukkit.Bukkit.getServer;
 
 public class StartGameCommand implements CommandExecutor {
@@ -30,6 +34,7 @@ public class StartGameCommand implements CommandExecutor {
     RoundStartHandler roundStartHandler;
     public static int timeVar = 0;
     public static String timerStatus = "Game Starts in";
+    ArenaWallHandler wallHandler;
     public StartGameCommand(Plugin plugin, PlayerPointsAPI ppAPI) {
         this.plugin = plugin;
         this.ppAPI = ppAPI;
@@ -45,10 +50,21 @@ public class StartGameCommand implements CommandExecutor {
                 if (handler.getNumTeams() == 0) {
                     player.sendMessage(ChatColor.RED + "ERROR: There are no Teams");
                 } else {
-                    roundStartHandler = new RoundStartHandler((BattleBox) plugin);
+                    wallHandler = new ArenaWallHandler(plugin);
+                    roundStartHandler = new RoundStartHandler((BattleBox) plugin, wallHandler);
+
                     startPregameCountdown();
 
                     player.sendMessage("Command Received");
+                    try {
+                        if(args.length > 0) {
+                            multiplier = Float.parseFloat(args[0]);
+                        }
+                    } catch(Exception e) {
+                        player.sendMessage(ChatColor.RED + "ERROR: MULTIPLIER MUST BE A FLOAT");
+                    }
+
+
                 }
             } else {
                 player.sendMessage(ChatColor.RED + "You do not have Permission to do this");
@@ -62,12 +78,19 @@ public class StartGameCommand implements CommandExecutor {
                     }
                 }
             } else {
-                roundStartHandler = new RoundStartHandler((BattleBox) plugin);
+                wallHandler = new ArenaWallHandler(plugin);
+                roundStartHandler = new RoundStartHandler((BattleBox) plugin, wallHandler);
                 startPregameCountdown();
+
+                try {
+                    if(args.length > 0) {
+                        multiplier = Float.parseFloat(args[0]);
+                    }
+                } catch(Exception e) {
+                    System.out.println(ChatColor.RED + "ERROR: MULTIPLIER MUST BE A FLOAT");
+                }
             }
         }
-
-
 
         return false;
     }
@@ -77,7 +100,7 @@ public class StartGameCommand implements CommandExecutor {
      */
     public void startPregameCountdown() {
         Countdown timer = new Countdown((JavaPlugin)plugin,
-                10,
+                90,
                 //Timer Start
                 () -> {
                     timerStatus = "Game Starts in";
@@ -92,6 +115,9 @@ public class StartGameCommand implements CommandExecutor {
                         p.setGameMode(GameMode.ADVENTURE);
                     }
 
+                    for(Team t: handler.getTeams()) {
+                        t.resetTempPoints();
+                    }
                 },
 
                 //Timer End
@@ -99,6 +125,7 @@ public class StartGameCommand implements CommandExecutor {
                     HandlerList.unregisterAll(plugin);
                     //Register EventListeners
                     getServer().getPluginManager().registerEvents(new PlayerAttackListener(ppAPI), plugin);
+                    getServer().getPluginManager().registerEvents(new PlayerDamageListener(ppAPI), plugin);
                     getServer().getPluginManager().registerEvents(new BlockBreakListener(roundStartHandler), plugin);
                     getServer().getPluginManager().registerEvents(new BlockPlaceListener(roundStartHandler, plugin, ppAPI), plugin);
                     getServer().getPluginManager().registerEvents(new ArrowShootListener(), plugin);
@@ -111,6 +138,35 @@ public class StartGameCommand implements CommandExecutor {
 
                 //Each Second
                 (t) -> {
+                    if(t.getSecondsLeft() == 90) {
+                        Bukkit.broadcastMessage(ChatColor.STRIKETHROUGH + "----------------------------------------");
+                        Bukkit.broadcastMessage(StringUtils.center(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "Battle Box", 30));
+                        Bukkit.broadcastMessage(ChatColor.BLUE + "" + ChatColor.BOLD + "How To Play:");
+                        Bukkit.broadcastMessage("You will be placed in an arena against the other teams in a round robin format." +
+                                "\nYou must replace the wool in the center with your color wool to win the round." +
+                                "\nKill your opponents, or don't, it's up to you! All that matters is that you build the wool.");
+                        Bukkit.broadcastMessage(ChatColor.STRIKETHROUGH + "----------------------------------------");
+                    }
+                    if(t.getSecondsLeft() == 80) {
+                        Bukkit.broadcastMessage(ChatColor.STRIKETHROUGH + "----------------------------------------");
+                        Bukkit.broadcastMessage(ChatColor.DARK_GREEN + "" + ChatColor.BOLD + "This Game Has the Following Kits:");
+                        Bukkit.broadcastMessage("The " + ChatColor.LIGHT_PURPLE + "marksman" + ChatColor.RESET + " kit adds a multishot 3 crossbow to your arsenal! A great way to provide covering fire." +
+                                                "\nThe " + ChatColor.DARK_AQUA + "potion master" + ChatColor.RESET + " kit gives you 2 harming, 2 healing, and 1 poison potion! Use them wisely." +
+                                                "\nThe " + ChatColor.BLUE + "swordsman" + ChatColor.RESET + " kit gives you an iron sword! You can do big damage with your sword." +
+                                                "\nThe " + ChatColor.RED + "armorer" + ChatColor.RESET + " kit adds protection 2 leather chestplate and leggings, with knockback resistance! Use it to tank damage.");
+                        Bukkit.broadcastMessage(ChatColor.STRIKETHROUGH + "----------------------------------------");
+                    }
+                    if(t.getSecondsLeft() == 70) {
+                        Bukkit.broadcastMessage(ChatColor.STRIKETHROUGH + "----------------------------------------");
+                        Bukkit.broadcastMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "How is the game Scored:");
+                        Bukkit.broadcastMessage("For winning: " + ChatColor.GOLD + (int)(200 * multiplier) + ChatColor.RESET + " points per team (" + ChatColor.GOLD + (int)(50 * multiplier) + ChatColor.RESET + " points per player" +
+                                "\nFor a Kill, the killer gets: " + ChatColor.GOLD + (int)(20 * multiplier) + ChatColor.RESET + " points");
+                        Bukkit.broadcastMessage(ChatColor.STRIKETHROUGH + "----------------------------------------");
+                    }
+
+
+
+
                     if(t.getSecondsLeft() == 15 || t.getSecondsLeft() == 10 || t.getSecondsLeft() <= 5) {
                         Bukkit.broadcastMessage(ChatColor.RED + "There are " + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + t.getSecondsLeft() + ChatColor.RESET + ChatColor.RED + " seconds until BattleBox Starts");
                     }

@@ -30,7 +30,7 @@ public class BlockBreakListener implements Listener {
                     isValidArena = false;
                 }
             }
-            if(isValidArena) {
+            if(isValidArena && roundStartHandler.getInGameTimer() > 0) {
                 Block block2 = e.getBlock();
                 block2.setType(Material.AIR);
             }

@@ -2,6 +2,7 @@ package io.github.cardsandhuskers.battlebox;
 
 import io.github.cardsandhuskers.battlebox.commands.*;
 import io.github.cardsandhuskers.battlebox.objects.Placeholder;
+import io.github.cardsandhuskers.battlebox.objects.StoredAttacker;
 import io.github.cardsandhuskers.teams.Teams;
 import io.github.cardsandhuskers.teams.handlers.TeamHandler;
 import io.github.cardsandhuskers.teams.objects.Team;
@@ -20,6 +21,9 @@ public final class BattleBox extends JavaPlugin {
     public static int round;
     public static ArrayList<Block> completedArenasList = new ArrayList<>();
     public static ArrayList<Team> winningTeamsList = new ArrayList<>();
+    public static ArrayList<StoredAttacker> storedAttackers = new ArrayList<>();
+
+    public static float multiplier = 1;
 
 
     @Override
@@ -33,14 +37,6 @@ public final class BattleBox extends JavaPlugin {
             Bukkit.getPluginManager().disablePlugin(this);
         }
 
-        /*
-        // When you want to access the API, check if the instance is null
-        if (this.ppAPI != null) {
-            // Do stuff with the API here
-
-        }
-
-         */
 
         //Placeholder API validation
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
@@ -72,6 +68,8 @@ public final class BattleBox extends JavaPlugin {
         getCommand("setBattleboxArena").setExecutor(new SetArenaCommand(this));
         getCommand("setBattleboxArenaSpawn").setExecutor(new SetArenaSpawnCommand(this));
         getCommand("setBattleboxKitSpawn").setExecutor(new SetArenaKitSelectionCommand(this));
+        getCommand("setLobby").setExecutor(new SetLobbyCommand(this));
+        getCommand("setBattleboxArenaWall").setExecutor(new SetArenaWallCommand(this));
 
         //Events Are registered in the StartGameCommand
 

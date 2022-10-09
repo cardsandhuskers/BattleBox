@@ -12,6 +12,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -160,7 +161,7 @@ public class TeamKits {
             Inventory inv = p.getInventory();
             ItemStack ironSword = new ItemStack(Material.IRON_SWORD, 1);
             ItemMeta ironSwordMeta = ironSword.getItemMeta();
-            ironSwordMeta.addEnchant(Enchantment.DAMAGE_ALL, 1, false);
+            //ironSwordMeta.addEnchant(Enchantment.DAMAGE_ALL, 1, false);
             ironSwordMeta.setUnbreakable(true);
             ironSword.setItemMeta(ironSwordMeta);
             inv.setItem(0, ironSword);
@@ -190,7 +191,9 @@ public class TeamKits {
             LeatherArmorMeta chestplateMeta = (LeatherArmorMeta) chestplate.getItemMeta();
             chestplateMeta.setColor(translateColor(handler.getPlayerTeam(p).color));
             chestplateMeta.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2, false);
-            chestplateMeta.addAttributeModifier(Attribute.GENERIC_KNOCKBACK_RESISTANCE, new AttributeModifier((p.getDisplayName()), .3, AttributeModifier.Operation.ADD_NUMBER));
+            chestplateMeta.addAttributeModifier(Attribute.GENERIC_KNOCKBACK_RESISTANCE, new AttributeModifier(p.getDisplayName(), .3, AttributeModifier.Operation.ADD_NUMBER));
+            chestplateMeta.addAttributeModifier(Attribute.GENERIC_ARMOR, new AttributeModifier(p.getDisplayName(), 3, AttributeModifier.Operation.ADD_NUMBER));
+            chestplateMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
             chestplateMeta.setUnbreakable(true);
             chestplate.setItemMeta(chestplateMeta);
             p.getEquipment().setChestplate(chestplate);
@@ -245,24 +248,24 @@ public class TeamKits {
     public void updateBlocks(int spot, Location backBlock, int side) {
         teamSide = side;
         if(side == 1) {
-            backBlock.setZ(backBlock.getZ() - spot);
+            backBlock.setZ(backBlock.getZ() - spot * 2);
             baseLoc = new Location(backBlock.getWorld(), backBlock.getX(), backBlock.getY(), backBlock.getZ());
             buildBlocks(backBlock, armorerSelected);
-            backBlock.setZ(backBlock.getZ() + 1);
+            backBlock.setZ(backBlock.getZ() + 2);
             buildBlocks(backBlock, swordsmanSelected);
-            backBlock.setZ(backBlock.getZ() + 1);
+            backBlock.setZ(backBlock.getZ() + 2);
             buildBlocks(backBlock, potionMasterSelected);
-            backBlock.setZ(backBlock.getZ() + 1);
+            backBlock.setZ(backBlock.getZ() + 2);
             buildBlocks(backBlock, marksmanSelected);
         } else {
-            backBlock.setZ(backBlock.getZ() + spot);
+            backBlock.setZ(backBlock.getZ() + spot * 2);
             baseLoc = new Location(backBlock.getWorld(), backBlock.getX(), backBlock.getY(), backBlock.getZ());
             buildBlocks(backBlock, armorerSelected);
-            backBlock.setZ(backBlock.getZ() - 1);
+            backBlock.setZ(backBlock.getZ() - 2);
             buildBlocks(backBlock, swordsmanSelected);
-            backBlock.setZ(backBlock.getZ() - 1);
+            backBlock.setZ(backBlock.getZ() - 2);
             buildBlocks(backBlock, potionMasterSelected);
-            backBlock.setZ(backBlock.getZ() - 1);
+            backBlock.setZ(backBlock.getZ() - 2);
             buildBlocks(backBlock, marksmanSelected);
         }
     }
@@ -279,6 +282,7 @@ public class TeamKits {
         } else {
             mat = Material.RED_CONCRETE;
         }
+        //Build the whole column (shift along y axis)
         for(int i = -1; i <= 2; i++) {
             Location loc = new Location(l.getWorld(), l.getX(), l.getY(), l.getZ());
             loc.setY(l.getY() + i);
@@ -291,21 +295,20 @@ public class TeamKits {
      * Runs at the end of kit selection time to give kits to anyone who hasn't selected a kit
      */
     public void populateRemainingKits() {
+        if(unkittedPlayers != null) {
+            while (unkittedPlayers.size() > 0) {
+                Player p = unkittedPlayers.get(0);
+                if (unusedKits.get(0).equals("marksman")) {
+                    selectMarksman(p);
+                } else if (unusedKits.get(0).equals("potionmaster")) {
+                    selectPotionMaster(p);
+                } else if (unusedKits.get(0).equals("swordsman")) {
+                    selectSwordsman(p);
+                } else if (unusedKits.get(0).equals("armorer")) {
+                    selectArmorer(p);
+                }
 
-        while(unkittedPlayers.size() > 0) {
-            Player p = unkittedPlayers.get(0);
-            System.out.println(unkittedPlayers.toString());
-            System.out.println(unusedKits.toString());
-            if(unusedKits.get(0).equals("marksman")) {
-                selectMarksman(p);
-            } else if(unusedKits.get(0).equals("potionmaster")) {
-                selectPotionMaster(p);
-            } else if(unusedKits.get(0).equals("swordsman")) {
-                selectSwordsman(p);
-            } else if(unusedKits.get(0).equals("armorer")) {
-                selectArmorer(p);
             }
-
         }
         resetLines();
     }

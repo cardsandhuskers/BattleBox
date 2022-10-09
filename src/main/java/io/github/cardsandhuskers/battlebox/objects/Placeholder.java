@@ -7,6 +7,7 @@ import org.bukkit.OfflinePlayer;
 
 import static io.github.cardsandhuskers.battlebox.BattleBox.handler;
 import static io.github.cardsandhuskers.battlebox.BattleBox.round;
+import static io.github.cardsandhuskers.battlebox.commands.StartGameCommand.timeVar;
 
 public class Placeholder extends PlaceholderExpansion {
     private final BattleBox plugin;
@@ -37,7 +38,9 @@ public class Placeholder extends PlaceholderExpansion {
     @Override
     public String onRequest(OfflinePlayer p, String s) {
         if(s.equalsIgnoreCase("timer")) {
-            return String.valueOf(StartGameCommand.timeVar);
+            int mins = timeVar / 60;
+            String seconds = String.format("%02d", timeVar - (mins * 60));
+            return mins + ":" + seconds;
         }
         if(s.equalsIgnoreCase("timerstage")) {
             return StartGameCommand.timerStatus;

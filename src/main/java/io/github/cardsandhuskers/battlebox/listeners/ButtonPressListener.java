@@ -49,14 +49,14 @@ public class ButtonPressListener implements Listener {
                     backBlock = new Location(buttonLoc.getWorld(), buttonLoc.getX() - 1, buttonLoc.getY(), buttonLoc.getZ());
 
                     //subtract z for side 1
-                    buttonLoc.setZ(buttonLoc.getZ() - 1);
+                    buttonLoc.setZ(buttonLoc.getZ() - 2);
 
                     while(buttonLoc.getBlock().getType() == Material.STONE_BUTTON) {
-                        buttonLoc.setZ(buttonLoc.getZ() - 1);
+                        buttonLoc.setZ(buttonLoc.getZ() - 2);
                         counter++;
                     }
                     //set initial button loc to first button in list
-                    buttonLoc.setZ(buttonLoc.getZ() + 1);
+                    buttonLoc.setZ(buttonLoc.getZ() + 2);
 
 
                 }
@@ -67,14 +67,14 @@ public class ButtonPressListener implements Listener {
                     backBlock = new Location(buttonLoc.getWorld(), buttonLoc.getX() + 1, buttonLoc.getY(), buttonLoc.getZ());
 
                     //add z for side 2
-                    buttonLoc.setZ(buttonLoc.getZ() + 1);
+                    buttonLoc.setZ(buttonLoc.getZ() + 2);
 
                     while(buttonLoc.getBlock().getType() == Material.STONE_BUTTON) {
-                        buttonLoc.setZ(buttonLoc.getZ() + 1);
+                        buttonLoc.setZ(buttonLoc.getZ() + 2);
                         counter++;
                     }
                     //set initial button loc to first button in list
-                    buttonLoc.setZ(buttonLoc.getZ() - 1);
+                    buttonLoc.setZ(buttonLoc.getZ() - 2);
                 }
 
 

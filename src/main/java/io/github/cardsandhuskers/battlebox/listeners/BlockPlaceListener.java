@@ -46,7 +46,7 @@ public class BlockPlaceListener implements Listener {
                 }
             }
             //if the location is not valid, cancel
-            if(!isValidLocation) {
+            if(!isValidLocation || roundStartHandler.getInGameTimer() <= 0) {
                 e.setCancelled(true);
             } else {
                 int completedArenas = 0;
@@ -89,8 +89,9 @@ public class BlockPlaceListener implements Listener {
                             Team t = handler.getTeamByColor(teamColor);
                             winningTeamsList.add(t);
                             for(Player p: t.getOnlinePlayers()) {
-                                ppAPI.give(p.getUniqueId(), 50);
-                                p.sendMessage(ChatColor.GREEN + "Your Team Won! " + ChatColor.RESET + "[+" + 50 + "] " + ChatColor.GREEN + "Points!");
+                                ppAPI.give(p.getUniqueId(), (int)(50 * multiplier));
+                                handler.getPlayerTeam(p).addTempPoints(p, (int)(50 * multiplier));
+                                p.sendMessage(ChatColor.GREEN + "Your Team Won! " + ChatColor.RESET + "[+" + 50 * multiplier + "] " + ChatColor.GREEN + "Points!");
                                 p.sendTitle(ChatColor.GREEN + "Your Team Won!", "", 4, 40, 4);
                                 p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
                             }
@@ -134,7 +135,6 @@ public class BlockPlaceListener implements Listener {
                 for(Block block:centerBlockList) {
                     //if tempBlock is equal to a center block return it
                     if(tempBlock.equals(block)) {
-                        System.out.println("EQUAL");
                         return tempBlock;
                     }
                 }

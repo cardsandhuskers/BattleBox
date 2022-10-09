@@ -4,6 +4,7 @@ import io.github.cardsandhuskers.battlebox.BattleBox;
 import io.github.cardsandhuskers.battlebox.commands.StartGameCommand;
 import io.github.cardsandhuskers.battlebox.objects.Bracket;
 import io.github.cardsandhuskers.battlebox.objects.Countdown;
+import io.github.cardsandhuskers.battlebox.objects.StoredAttacker;
 import io.github.cardsandhuskers.battlebox.objects.TeamKits;
 import io.github.cardsandhuskers.teams.objects.Team;
 import org.bukkit.*;
@@ -25,9 +26,14 @@ public class RoundStartHandler {
     private ArrayList<TeamKits> teamKitsList;
     Bracket bracket;
     RoundEndHandler roundEndHandler;
+    ArenaWallHandler wallHandler;
 
-    public RoundStartHandler(BattleBox plugin) {
+
+
+    public RoundStartHandler(BattleBox plugin, ArenaWallHandler wallHandler) {
+
         this.plugin = plugin;
+        this.wallHandler = wallHandler;
         blockList = new ArrayList<>();
         centerBlockList = new ArrayList<>();
         bracket = new Bracket();
@@ -35,16 +41,12 @@ public class RoundStartHandler {
         //matchups = bracket.getMatchups(handler.getTeams(), round);
         teleporter = new PlayerTeleportHandler(plugin, matchups);
         teamKitsList = new ArrayList<>();
-
     }
 
     /**
      * Checks if the round was the last one before initializing
      */
     public void startRound() {
-
-
-
         int totalRounds;
         if(handler.getNumTeams() %2 == 1) {
             totalRounds = handler.getNumTeams();
@@ -66,6 +68,7 @@ public class RoundStartHandler {
     public void init() {
         centerBlockList.clear();
         blockList.clear();
+        storedAttackers.clear();
 
 
         //make sure plugin instance is not null (error handling)
@@ -86,7 +89,7 @@ public class RoundStartHandler {
             }
 
             initKitTimer();
-
+            wallHandler.buildWalls();
 
         } else {
             System.out.println("PLUGIN IS NULL");
@@ -154,10 +157,12 @@ public class RoundStartHandler {
                             if(t.equals(matchups[i][0])) {
                                 for(Player p:t.getOnlinePlayers()) {
                                     p.sendTitle("Round: " + round,matchups[i][0].color + matchups[i][0].getTeamName() + ChatColor.RESET + " vs. " + matchups[i][1].color + matchups[i][1].getTeamName() ,3,40,3);
+                                    p.sendMessage("Round: " + round + matchups[i][0].color + matchups[i][0].getTeamName() + ChatColor.RESET + " vs. " + matchups[i][1].color + matchups[i][1].getTeamName());
                                 }
                             } else if(t.equals(matchups[i][1])) {
                                 for(Player p:t.getOnlinePlayers()) {
                                     p.sendTitle("Round: " + round, matchups[i][1].color + matchups[i][1].getTeamName() + ChatColor.RESET + " vs. " + matchups[i][0].color + matchups[i][0].getTeamName(), 3, 40, 3);
+                                    p.sendMessage("Round "+ round + ": " + matchups[i][1].color + matchups[i][1].getTeamName() + ChatColor.RESET + " vs. " + matchups[i][0].color + matchups[i][0].getTeamName());
                                 }
                             }
                         }
@@ -213,22 +218,26 @@ public class RoundStartHandler {
                 //Timer End
                 () -> {
                     StartGameCommand.timeVar = 0;
-                    Bukkit.broadcastMessage("" + ChatColor.BOLD + ChatColor.RED + "GO!!!");
+
                     initInGameTimer();
-                    for(Player p:Bukkit.getOnlinePlayers()) {
-                        p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1f, 2f);
-                        p.sendTitle(handler.getPlayerTeam(p).color + "GO!", "", 2, 12, 2);
+                    for(Team t: handler.getTeams()) {
+                        for(Player p:t.getOnlinePlayers()) {
+                            p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1f, 2f);
+                            p.sendTitle(handler.getPlayerTeam(p).color + "GO!", "", 2, 12, 2);
+                            wallHandler.deleteWalls();
+                        }
                     }
                 },
 
                 //Each Second
                 (t) -> {
                     StartGameCommand.timeVar = t.getSecondsLeft();
-                    Bukkit.broadcastMessage(ChatColor.RED + "Box opens in " + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + t.getSecondsLeft() + ChatColor.RESET + ChatColor.RED + " Seconds!");
-                    for(Player p:Bukkit.getOnlinePlayers()) {
-                        p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1f, 1f);
+                    for(Team team: handler.getTeams()) {
+                        for(Player p:team.getOnlinePlayers()) {
+                            p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1f, 1f);
+                            p.sendTitle(handler.getPlayerTeam(p).color + "Game Starts in", ">" + t.getSecondsLeft() + "<", 0, 20, 0);
+                        }
                     }
-
                 }
         );
 
@@ -273,6 +282,15 @@ public class RoundStartHandler {
      */
     public void cancelInGameTimer() {
         inGameTimer.cancelTimer();
+    }
+
+    public int getInGameTimer() {
+        if(inGameTimer!= null) {
+            return inGameTimer.getSecondsLeft();
+        } else {
+            return 0;
+        }
+
     }
 
     public void endRound() {
