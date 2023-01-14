@@ -31,7 +31,7 @@ public class SetArenaSpawnCommand implements CommandExecutor {
                         plugin.getConfig().set("ArenaSpawns.Arena" + arenaIndex + "." + teamSide, location);
                         plugin.saveConfig();
 
-                        p.sendMessage("Arena" + arenaIndex + " Team " + teamSide + " Location set at:\nWorld: " + location.getWorld() + "\nX: " + location.getX() + " Y: " + location.getY() + " Z: " + location.getZ());
+                        p.sendMessage("Arena: " + arenaIndex + " Team: " + teamSide + " Location set at:\nWorld: " + location.getWorld() + "\nX: " + location.getX() + " Y: " + location.getY() + " Z: " + location.getZ());
 
                     } catch (Exception e) {
                         p.sendMessage(ChatColor.RED + "ERROR: Arguments must be integers");

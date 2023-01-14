@@ -1,8 +1,10 @@
 package io.github.cardsandhuskers.battlebox.listeners;
 
+import io.github.cardsandhuskers.battlebox.BattleBox;
 import io.github.cardsandhuskers.battlebox.handlers.PlayerDeathHandler;
 import io.github.cardsandhuskers.battlebox.objects.StoredAttacker;
 import org.black_ixx.playerpoints.PlayerPointsAPI;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -13,28 +15,36 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import java.util.ArrayList;
 
 import static io.github.cardsandhuskers.battlebox.BattleBox.*;
+import static io.github.cardsandhuskers.battlebox.commands.StartGameCommand.timerStatus;
 
 public class PlayerDamageListener implements Listener {
     //Designed to listen for environment damage
-    PlayerPointsAPI ppAPI;
+    private PlayerPointsAPI ppAPI;
+    private BattleBox plugin = (BattleBox) Bukkit.getPluginManager().getPlugin("BattleBox");
     public PlayerDamageListener(PlayerPointsAPI ppAPI) {
         this.ppAPI = ppAPI;
     }
 
     @EventHandler
     public void onPlayerDamage(EntityDamageEvent e) {
+        if(!timerStatus.equals("Round ends in")) {
+            e.setCancelled(true);
+            return;
+        }
         if(e.getEntity() instanceof Player p) {
             if(e.getCause() == EntityDamageEvent.DamageCause.FIRE || e.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK || e.getCause() == EntityDamageEvent.DamageCause.LAVA || e.getCause() == EntityDamageEvent.DamageCause.FALL || e.getCause() == EntityDamageEvent.DamageCause.VOID) {
                 if(p.getHealth() - e.getDamage() <= 0) {
                     for(StoredAttacker s:storedAttackers) {
                         if(s.getAttacked().equals(p)) {
                             Player attacker = s.getAttacker();
-                            ppAPI.give(attacker.getUniqueId(), (int)(20 * multiplier));
-                            handler.getPlayerTeam(attacker).addTempPoints(attacker, (int)(20 * multiplier));
+                            int numPoints = plugin.getConfig().getInt("killPoints");
+
+                            ppAPI.give(attacker.getUniqueId(), (int)(numPoints * multiplier));
+                            handler.getPlayerTeam(attacker).addTempPoints(attacker, (int)(numPoints * multiplier));
                             
                             for(Player player: handler.getPlayerTeam(attacker).getOnlinePlayers()) {
                                 if(player.equals(attacker)) {
-                                    player.sendMessage("[+" + 20 * multiplier + " points] " + handler.getPlayerTeam(p).color + p.getName() + ChatColor.RESET + " was killed by " + handler.getPlayerTeam(attacker).color + attacker.getName());
+                                    player.sendMessage("[+" + numPoints * multiplier + " points] " + handler.getPlayerTeam(p).color + p.getName() + ChatColor.RESET + " was killed by " + handler.getPlayerTeam(attacker).color + attacker.getName());
                                 } else {
                                     player.sendMessage(handler.getPlayerTeam(p).color + p.getName() + ChatColor.RESET + " was killed by " + handler.getPlayerTeam(attacker).color + attacker.getName());
                                 }
@@ -51,7 +61,7 @@ public class PlayerDamageListener implements Listener {
                             
                         }
                     }
-                    p.sendMessage("Dead");
+                    //p.sendMessage("Dead");
                     e.setCancelled(true);
                     PlayerDeathHandler deathHandler = new PlayerDeathHandler(p);
                 }

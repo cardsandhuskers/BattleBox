@@ -1,9 +1,11 @@
 package io.github.cardsandhuskers.battlebox.listeners;
 
+import io.github.cardsandhuskers.battlebox.BattleBox;
 import io.github.cardsandhuskers.battlebox.handlers.PlayerDeathHandler;
 import io.github.cardsandhuskers.battlebox.objects.StoredAttacker;
 import io.github.cardsandhuskers.teams.objects.Team;
 import org.black_ixx.playerpoints.PlayerPointsAPI;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.*;
@@ -13,10 +15,12 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.Potion;
 
 import static io.github.cardsandhuskers.battlebox.BattleBox.*;
+import static io.github.cardsandhuskers.battlebox.commands.StartGameCommand.timerStatus;
 
 
 public class PlayerAttackListener implements Listener {
-    public PlayerPointsAPI ppAPI;
+    private PlayerPointsAPI ppAPI;
+    private BattleBox plugin = (BattleBox) Bukkit.getPluginManager().getPlugin("BattleBox");
     public PlayerAttackListener(PlayerPointsAPI ppAPI) {
         this.ppAPI = ppAPI;
     }
@@ -62,6 +66,7 @@ public class PlayerAttackListener implements Listener {
      * @param e
      */
     public void damage(Player attacker, Player attacked, EntityDamageByEntityEvent e) {
+        if(!timerStatus.equals("Round ends in")) e.setCancelled(true);
         //handle error if someone's team is null
         if (!(handler.getPlayerTeam(attacker) == null || handler.getPlayerTeam(attacked) == null)) {
             if (handler.getPlayerTeam(attacker).equals(handler.getPlayerTeam(attacked))) {
@@ -86,17 +91,16 @@ public class PlayerAttackListener implements Listener {
                     storedAttackers.add(storedAttacker);
                 }
 
-
                 if (attacked.getHealth() - e.getDamage() <= 0) {
-                    //attacked.sendMessage("You Died");
                     e.setCancelled(true);
                     PlayerDeathHandler deathHandler = new PlayerDeathHandler(attacked);
-                    ppAPI.give(attacker.getUniqueId(), (int)(20 * multiplier));
-                    handler.getPlayerTeam(attacker).addTempPoints(attacker, (int)(20 * multiplier));
+                    int numPoints = plugin.getConfig().getInt("killPoints");
+                    ppAPI.give(attacker.getUniqueId(), (int)(numPoints * multiplier));
+                    handler.getPlayerTeam(attacker).addTempPoints(attacker, (int)(numPoints * multiplier));
 
                     for(Player p: handler.getPlayerTeam(attacker).getOnlinePlayers()) {
                         if(p.equals(attacker)) {
-                            p.sendMessage("[+" + 20 * multiplier + " points] " + handler.getPlayerTeam(attacked).color + attacked.getName() + ChatColor.RESET + " was killed by " + handler.getPlayerTeam(attacker).color + attacker.getName());
+                            p.sendMessage("[+" + numPoints * multiplier + " points] " + handler.getPlayerTeam(attacked).color + attacked.getName() + ChatColor.RESET + " was killed by " + handler.getPlayerTeam(attacker).color + attacker.getName());
                         } else {
                             p.sendMessage(handler.getPlayerTeam(attacked).color + attacked.getName() + ChatColor.RESET + " was killed by " + handler.getPlayerTeam(attacker).color + attacker.getName());
                         }

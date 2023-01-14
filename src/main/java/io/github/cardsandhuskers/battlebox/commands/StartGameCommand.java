@@ -9,10 +9,7 @@ import io.github.cardsandhuskers.battlebox.objects.StoredAttacker;
 import io.github.cardsandhuskers.teams.objects.Team;
 import org.apache.commons.lang3.StringUtils;
 import org.black_ixx.playerpoints.PlayerPointsAPI;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
+import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -99,8 +96,10 @@ public class StartGameCommand implements CommandExecutor {
      * Starts the countdown before the first round starts
      */
     public void startPregameCountdown() {
+        int totalSeconds = plugin.getConfig().getInt("PregameTime");
         Countdown timer = new Countdown((JavaPlugin)plugin,
-                90,
+                //should be 80
+                totalSeconds,
                 //Timer Start
                 () -> {
                     timerStatus = "Game Starts in";
@@ -109,11 +108,19 @@ public class StartGameCommand implements CommandExecutor {
                         p.teleport(location);
                     }
                     getServer().getPluginManager().registerEvents(new PregamePlayerAttackListener(), plugin);
-                    Bukkit.broadcastMessage(ChatColor.LIGHT_PURPLE + "Battlebox is Starting Soon. Get Ready!");
+                    getServer().getPluginManager().registerEvents(new PlayerJoinListener(plugin), plugin);
 
-                    for(Player p:Bukkit.getOnlinePlayers()) {
-                        p.setGameMode(GameMode.ADVENTURE);
-                    }
+                    //Bukkit.broadcastMessage(ChatColor.LIGHT_PURPLE + "Battlebox is Starting Soon. Get Ready!");
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, ()-> {
+                        for(Player p:Bukkit.getOnlinePlayers()) {
+                            if(handler.getPlayerTeam(p) != null) {
+                                p.setGameMode(GameMode.ADVENTURE);
+                            } else {
+                                p.setGameMode(GameMode.SPECTATOR);
+                            }
+                        }
+                    }, 5L);
+
 
                     for(Team t: handler.getTeams()) {
                         t.resetTempPoints();
@@ -131,6 +138,7 @@ public class StartGameCommand implements CommandExecutor {
                     getServer().getPluginManager().registerEvents(new ArrowShootListener(), plugin);
                     getServer().getPluginManager().registerEvents(new ArrowStopListener(), plugin);
                     getServer().getPluginManager().registerEvents(new ButtonPressListener(roundStartHandler), plugin);
+                    getServer().getPluginManager().registerEvents(new PlayerJoinListener(plugin), plugin);
 
                     roundStartHandler.startRound();
 
@@ -138,7 +146,7 @@ public class StartGameCommand implements CommandExecutor {
 
                 //Each Second
                 (t) -> {
-                    if(t.getSecondsLeft() == 90) {
+                    if(t.getSecondsLeft() == totalSeconds - 1) {
                         Bukkit.broadcastMessage(ChatColor.STRIKETHROUGH + "----------------------------------------");
                         Bukkit.broadcastMessage(StringUtils.center(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "Battle Box", 30));
                         Bukkit.broadcastMessage(ChatColor.BLUE + "" + ChatColor.BOLD + "How To Play:");
@@ -147,7 +155,7 @@ public class StartGameCommand implements CommandExecutor {
                                 "\nKill your opponents, or don't, it's up to you! All that matters is that you build the wool.");
                         Bukkit.broadcastMessage(ChatColor.STRIKETHROUGH + "----------------------------------------");
                     }
-                    if(t.getSecondsLeft() == 80) {
+                    if(t.getSecondsLeft() == totalSeconds - 10) {
                         Bukkit.broadcastMessage(ChatColor.STRIKETHROUGH + "----------------------------------------");
                         Bukkit.broadcastMessage(ChatColor.DARK_GREEN + "" + ChatColor.BOLD + "This Game Has the Following Kits:");
                         Bukkit.broadcastMessage("The " + ChatColor.LIGHT_PURPLE + "marksman" + ChatColor.RESET + " kit adds a multishot 3 crossbow to your arsenal! A great way to provide covering fire." +
@@ -156,18 +164,18 @@ public class StartGameCommand implements CommandExecutor {
                                                 "\nThe " + ChatColor.RED + "armorer" + ChatColor.RESET + " kit adds protection 2 leather chestplate and leggings, with knockback resistance! Use it to tank damage.");
                         Bukkit.broadcastMessage(ChatColor.STRIKETHROUGH + "----------------------------------------");
                     }
-                    if(t.getSecondsLeft() == 70) {
+                    if(t.getSecondsLeft() == totalSeconds - 20) {
                         Bukkit.broadcastMessage(ChatColor.STRIKETHROUGH + "----------------------------------------");
                         Bukkit.broadcastMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "How is the game Scored:");
-                        Bukkit.broadcastMessage("For winning: " + ChatColor.GOLD + (int)(200 * multiplier) + ChatColor.RESET + " points per team (" + ChatColor.GOLD + (int)(50 * multiplier) + ChatColor.RESET + " points per player" +
-                                "\nFor a Kill, the killer gets: " + ChatColor.GOLD + (int)(20 * multiplier) + ChatColor.RESET + " points");
+                        Bukkit.broadcastMessage("For winning: " + ChatColor.GOLD + (int)(plugin.getConfig().getInt("roundWinPoints") * multiplier) + ChatColor.RESET + " points per team (" + ChatColor.GOLD + (int)(50 * multiplier) + ChatColor.RESET + " points per player" +
+                                "\nFor a Kill, the killer gets: " + ChatColor.GOLD + (int)(plugin.getConfig().getInt("killPoints") * multiplier) + ChatColor.RESET + " points");
                         Bukkit.broadcastMessage(ChatColor.STRIKETHROUGH + "----------------------------------------");
                     }
 
-
-
-
                     if(t.getSecondsLeft() == 15 || t.getSecondsLeft() == 10 || t.getSecondsLeft() <= 5) {
+                        for(Player p:Bukkit.getOnlinePlayers()) {
+                            p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
+                        }
                         Bukkit.broadcastMessage(ChatColor.RED + "There are " + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + t.getSecondsLeft() + ChatColor.RESET + ChatColor.RED + " seconds until BattleBox Starts");
                     }
                     timeVar = t.getSecondsLeft();
@@ -176,6 +184,7 @@ public class StartGameCommand implements CommandExecutor {
 
         // Start scheduling, don't use the "run" method unless you want to skip a second
         timer.scheduleTimer();
+
     }
 
 }

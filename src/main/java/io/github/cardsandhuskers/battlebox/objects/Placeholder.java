@@ -4,9 +4,9 @@ import io.github.cardsandhuskers.battlebox.BattleBox;
 import io.github.cardsandhuskers.battlebox.commands.StartGameCommand;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
-import static io.github.cardsandhuskers.battlebox.BattleBox.handler;
-import static io.github.cardsandhuskers.battlebox.BattleBox.round;
+import static io.github.cardsandhuskers.battlebox.BattleBox.*;
 import static io.github.cardsandhuskers.battlebox.commands.StartGameCommand.timeVar;
 
 public class Placeholder extends PlaceholderExpansion {
@@ -59,6 +59,13 @@ public class Placeholder extends PlaceholderExpansion {
                 currentRound = totalRounds;
             }
             return currentRound + "/" + (totalRounds);
+        }
+        if(s.equalsIgnoreCase("roundsWon")) {
+            if(roundsWon.containsKey(handler.getPlayerTeam((Player) p))) {
+                return roundsWon.get(handler.getPlayerTeam((Player)p)) + "";
+            } else {
+                return 0 + "";
+            }
         }
         return null;
     }

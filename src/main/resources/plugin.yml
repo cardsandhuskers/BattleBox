@@ -6,7 +6,7 @@ depend: [PlayerPoints, PlaceholderAPI, Teams]
 commands:
   startBattleBox:
     description: starts the game
-    command: /<command>
+    command: /<command> [multiplier]
   setBattleboxSpawn:
     description: sets point where players enter the world
     command: /<command>
@@ -19,3 +19,9 @@ commands:
   setBattleBoxKitSpawn:
     description: sets the spawn point for the kit selection room for the specified arena and team
     command: /<command> [arena] [side]
+  setLobby:
+    description: sets the location of the lobby
+    command: /<command>
+  setBattleboxArenaWall:
+    description: sets the location of the bottom center block of the drop wall
+    usage: /<command> [arena] [side]

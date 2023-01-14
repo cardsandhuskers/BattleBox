@@ -76,7 +76,7 @@ public class TeamKits {
             ItemStack crossbow = new ItemStack(Material.CROSSBOW, 1);
             ItemMeta crossbowMeta = crossbow.getItemMeta();
             //crossbowMeta.addEnchant(Enchantment.ARROW_DAMAGE, 1, false);
-            crossbowMeta.addEnchant(Enchantment.QUICK_CHARGE, 3, false);
+            crossbowMeta.addEnchant(Enchantment.QUICK_CHARGE, 2, false);
             crossbowMeta.addEnchant(Enchantment.MULTISHOT, 1, false);
             crossbowMeta.setDisplayName("Marksman's Crossbow");
             crossbowMeta.setUnbreakable(true);
@@ -122,7 +122,7 @@ public class TeamKits {
 
             ItemStack poisonPotion = new ItemStack(Material.SPLASH_POTION, 1);
             PotionMeta poisonPotionMeta = (PotionMeta) poisonPotion.getItemMeta();
-            poisonPotionMeta.addCustomEffect(new PotionEffect(PotionEffectType.POISON, 300, 0), false);
+            poisonPotionMeta.addCustomEffect(new PotionEffect(PotionEffectType.POISON, 400, 0), false);
             poisonPotionMeta.setColor(Color.fromRGB(79,150,50));
             poisonPotionMeta.setDisplayName("Splash Potion of Poison");
             poisonPotion.setItemMeta(poisonPotionMeta);
@@ -190,7 +190,7 @@ public class TeamKits {
             ItemStack chestplate = new ItemStack(Material.LEATHER_CHESTPLATE, 1);
             LeatherArmorMeta chestplateMeta = (LeatherArmorMeta) chestplate.getItemMeta();
             chestplateMeta.setColor(translateColor(handler.getPlayerTeam(p).color));
-            chestplateMeta.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2, false);
+            chestplateMeta.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 3, false);
             chestplateMeta.addAttributeModifier(Attribute.GENERIC_KNOCKBACK_RESISTANCE, new AttributeModifier(p.getDisplayName(), .3, AttributeModifier.Operation.ADD_NUMBER));
             chestplateMeta.addAttributeModifier(Attribute.GENERIC_ARMOR, new AttributeModifier(p.getDisplayName(), 3, AttributeModifier.Operation.ADD_NUMBER));
             chestplateMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -202,7 +202,7 @@ public class TeamKits {
             ItemStack leggings = new ItemStack(Material.LEATHER_LEGGINGS, 1);
             LeatherArmorMeta leggingsItemMeta = (LeatherArmorMeta) leggings.getItemMeta();
             leggingsItemMeta.setColor(translateColor(handler.getPlayerTeam(p).color));
-            leggingsItemMeta.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2, false);
+            leggingsItemMeta.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 3, false);
             leggingsItemMeta.setUnbreakable(true);
             leggings.setItemMeta(leggingsItemMeta);
             p.getEquipment().setLeggings(leggings);
@@ -296,7 +296,8 @@ public class TeamKits {
      */
     public void populateRemainingKits() {
         if(unkittedPlayers != null) {
-            while (unkittedPlayers.size() > 0) {
+            //weird error where unusedKits may be empty for some reason, this should stop the error
+            while (unkittedPlayers.size() > 0 && !unusedKits.isEmpty()) {
                 Player p = unkittedPlayers.get(0);
                 if (unusedKits.get(0).equals("marksman")) {
                     selectMarksman(p);
@@ -336,14 +337,19 @@ public class TeamKits {
 
         ItemStack helmet = new ItemStack(Material.LEATHER_HELMET, 1);
         LeatherArmorMeta helmetMeta = (LeatherArmorMeta) helmet.getItemMeta();
-        helmetMeta.setColor(translateColor(handler.getPlayerTeam(p).color));
+        //some error happened here, so I make sure they have a team to color stuff
+        if(handler.getPlayerTeam(p) != null) {
+            helmetMeta.setColor(translateColor(team.color));
+        }
         helmetMeta.setUnbreakable(true);
         helmet.setItemMeta(helmetMeta);
         p.getEquipment().setHelmet(helmet);
 
         ItemStack boots = new ItemStack(Material.LEATHER_BOOTS, 1);
         LeatherArmorMeta bootsMeta = (LeatherArmorMeta) boots.getItemMeta();
-        bootsMeta.setColor(translateColor(handler.getPlayerTeam(p).color));
+        if(handler.getPlayerTeam(p) != null) {
+            bootsMeta.setColor(translateColor(team.color));
+        }
         bootsMeta.setUnbreakable(true);
         boots.setItemMeta(bootsMeta);
         p.getEquipment().setBoots(boots);
@@ -362,12 +368,12 @@ public class TeamKits {
 
         ItemStack crossbow = new ItemStack(Material.CROSSBOW, 1);
         ItemMeta crossbowMeta = crossbow.getItemMeta();
-        crossbowMeta.addEnchant(Enchantment.QUICK_CHARGE, 3, false);
+        crossbowMeta.addEnchant(Enchantment.QUICK_CHARGE, 2, false);
         crossbowMeta.setUnbreakable(true);
         crossbow.setItemMeta(crossbowMeta);
         inv.setItem(1, crossbow);
 
-        ItemStack arrow = new ItemStack(Material.ARROW, 2);
+        ItemStack arrow = new ItemStack(Material.ARROW, 12);
         inv.setItem(17, arrow);
     }
     public void healPlayer(Player p) {

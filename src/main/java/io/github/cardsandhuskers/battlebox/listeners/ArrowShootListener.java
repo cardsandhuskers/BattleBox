@@ -13,9 +13,9 @@ public class ArrowShootListener implements Listener {
     @EventHandler
     public void onArrowShoot(EntityShootBowEvent e) {
         Player p = (Player) e.getEntity();
-        Inventory inv = p.getInventory();
+        //Inventory inv = p.getInventory();
 
-        ItemStack arrow = new ItemStack(Material.ARROW, 2);
-        inv.setItem(17, arrow);
+        //ItemStack arrow = new ItemStack(Material.ARROW, 12);
+        //inv.setItem(17, arrow);
     }
 }

@@ -1,0 +1,14 @@
+#time before game starts
+PregameTime: 30
+#time to select kit before each round
+KitTime: 20
+#countdown before round start
+RoundPrepTime: 5
+#time during round
+RoundTime: 60
+#time after the game ends
+GameEndTime: 30
+
+#points assigned
+roundWinPoints: 200
+killPoints: 25

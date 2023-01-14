@@ -18,8 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import static io.github.cardsandhuskers.battlebox.BattleBox.handler;
-import static io.github.cardsandhuskers.battlebox.BattleBox.round;
+import static io.github.cardsandhuskers.battlebox.BattleBox.*;
 
 public class GameEndHandler {
     private Plugin plugin;
@@ -53,6 +52,7 @@ public class GameEndHandler {
                             p.sendMessage(ChatColor.DARK_BLUE + "------------------------------\n");
                         }
                     }
+                    roundsWon.clear();
                 },
 
                 //Timer End
@@ -85,6 +85,7 @@ public class GameEndHandler {
                         for(int i = 0; i <= max; i++) {
                             TempPointsHolder h = tempPointsList.get(i);
                             Bukkit.broadcastMessage(number + ". " + handler.getPlayerTeam(h.getPlayer()).color + h.getPlayer().getName() + ChatColor.RESET + "    Points: " +  h.getPoints());
+                            number++;
                         }
                         Bukkit.broadcastMessage(ChatColor.DARK_RED + "------------------------------");
                     }
@@ -106,10 +107,10 @@ public class GameEndHandler {
 
     public void gameEndTimer() {
         Countdown timer = new Countdown((JavaPlugin)plugin,
-                10,
+                plugin.getConfig().getInt("GameEndTime"),
                 //Timer Start
                 () -> {
-                    StartGameCommand.timerStatus = "Return to Lobby in";
+                    StartGameCommand.timerStatus = "Return to Lobby";
                 },
 
                 //Timer End
@@ -118,6 +119,12 @@ public class GameEndHandler {
                     Location location = plugin.getConfig().getLocation("Lobby");
                     for (Player p: Bukkit.getOnlinePlayers()) {
                         p.teleport(location);
+                    }
+                    for(Player p:Bukkit.getOnlinePlayers()) {
+                        if(p.isOp()) {
+                            p.performCommand("startRound");
+                            break;
+                        }
                     }
                     //Unregisters the handlers to clean them up
                     HandlerList.unregisterAll(plugin);

@@ -13,6 +13,7 @@ import org.bukkit.block.Block;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public final class BattleBox extends JavaPlugin {
@@ -22,6 +23,7 @@ public final class BattleBox extends JavaPlugin {
     public static ArrayList<Block> completedArenasList = new ArrayList<>();
     public static ArrayList<Team> winningTeamsList = new ArrayList<>();
     public static ArrayList<StoredAttacker> storedAttackers = new ArrayList<>();
+    public static HashMap<Team, Integer> roundsWon = new HashMap<>();
 
     public static float multiplier = 1;
 
@@ -73,7 +75,8 @@ public final class BattleBox extends JavaPlugin {
 
         //Events Are registered in the StartGameCommand
 
-
+        saveDefaultConfig();
+        getConfig().options().copyDefaults(true);
     }
 
     @Override

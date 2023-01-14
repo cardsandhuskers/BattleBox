@@ -148,8 +148,9 @@ public class RoundStartHandler {
      * 15-second pregame timer, for selecting kits
      */
     public void initKitTimer() {
+        int totalTime = plugin.getConfig().getInt("KitTime");
         Countdown timer = new Countdown((JavaPlugin)plugin,
-                15,
+                totalTime,
                 //Timer Start
                 () -> {
                     for(Team t: handler.getTeams()) {
@@ -157,7 +158,7 @@ public class RoundStartHandler {
                             if(t.equals(matchups[i][0])) {
                                 for(Player p:t.getOnlinePlayers()) {
                                     p.sendTitle("Round: " + round,matchups[i][0].color + matchups[i][0].getTeamName() + ChatColor.RESET + " vs. " + matchups[i][1].color + matchups[i][1].getTeamName() ,3,40,3);
-                                    p.sendMessage("Round: " + round + matchups[i][0].color + matchups[i][0].getTeamName() + ChatColor.RESET + " vs. " + matchups[i][1].color + matchups[i][1].getTeamName());
+                                    p.sendMessage("Round " + round + ": " + matchups[i][0].color + matchups[i][0].getTeamName() + ChatColor.RESET + " vs. " + matchups[i][1].color + matchups[i][1].getTeamName());
                                 }
                             } else if(t.equals(matchups[i][1])) {
                                 for(Player p:t.getOnlinePlayers()) {
@@ -188,12 +189,15 @@ public class RoundStartHandler {
                 //Each Second
                 (t) -> {
                     StartGameCommand.timeVar = t.getSecondsLeft();
-                    if(t.getSecondsLeft() == 15) {
+                    if(t.getSecondsLeft() == totalTime) {
                         Bukkit.broadcastMessage(ChatColor.RED + "You have " + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + t.getSecondsLeft() + ChatColor.RESET + ChatColor.RED + " seconds to select your kit!");
                     }
 
-                    if(t.getSecondsLeft() <= 5) {
+                    if(t.getSecondsLeft() == 5) {
                         Bukkit.broadcastMessage(ChatColor.RED + "You have " + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + t.getSecondsLeft() + ChatColor.RESET + ChatColor.RED + " seconds to select your kit!");
+                        for(Player p:Bukkit.getOnlinePlayers()) {
+                            p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
+                        }
                     }
                 }
         );
@@ -207,7 +211,7 @@ public class RoundStartHandler {
      */
     public void initGameCountdownTimer() {
         Countdown timer = new Countdown((JavaPlugin)plugin,
-                5,
+                plugin.getConfig().getInt("RoundPrepTime"),
                 //Timer Start
                 () -> {
                     StartGameCommand.timerStatus = "Battle Begins in";
@@ -250,7 +254,7 @@ public class RoundStartHandler {
      */
     public void initInGameTimer() {
         inGameTimer = new Countdown((JavaPlugin)plugin,
-                60,
+                plugin.getConfig().getInt("RoundTime"),
                 //Timer Start
                 () -> {
                     StartGameCommand.timerStatus = "Round ends in";

@@ -47,6 +47,6 @@ public class SetArenaWallCommand implements CommandExecutor {
 
 
 
-        return false;
+        return true;
     }
 }
