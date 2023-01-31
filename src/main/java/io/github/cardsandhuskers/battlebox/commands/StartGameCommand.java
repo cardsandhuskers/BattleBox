@@ -167,7 +167,7 @@ public class StartGameCommand implements CommandExecutor {
                     if(t.getSecondsLeft() == totalSeconds - 20) {
                         Bukkit.broadcastMessage(ChatColor.STRIKETHROUGH + "----------------------------------------");
                         Bukkit.broadcastMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "How is the game Scored:");
-                        Bukkit.broadcastMessage("For winning: " + ChatColor.GOLD + (int)(plugin.getConfig().getInt("roundWinPoints") * multiplier) + ChatColor.RESET + " points per team (" + ChatColor.GOLD + (int)(50 * multiplier) + ChatColor.RESET + " points per player" +
+                        Bukkit.broadcastMessage("For winning: " + ChatColor.GOLD + (int)(plugin.getConfig().getInt("roundWinPoints") * multiplier) + ChatColor.RESET + " points per team (" + ChatColor.GOLD + (int)(plugin.getConfig().getInt("roundWinPoints") * multiplier/handler.getTeams().get(0).getSize()) + ChatColor.RESET + " points per player" +
                                 "\nFor a Kill, the killer gets: " + ChatColor.GOLD + (int)(plugin.getConfig().getInt("killPoints") * multiplier) + ChatColor.RESET + " points");
                         Bukkit.broadcastMessage(ChatColor.STRIKETHROUGH + "----------------------------------------");
                     }

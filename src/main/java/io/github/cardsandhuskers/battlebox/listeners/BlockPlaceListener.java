@@ -90,8 +90,8 @@ public class BlockPlaceListener implements Listener {
                             winningTeamsList.add(t);
                             for(Player p: t.getOnlinePlayers()) {
                                 int numPoints = plugin.getConfig().getInt("roundWinPoints")/t.getOnlinePlayers().size();
-                                ppAPI.give(p.getUniqueId(), (int)(numPoints * multiplier));
-                                handler.getPlayerTeam(p).addTempPoints(p, (int)(numPoints * multiplier));
+                                //ppAPI.give(p.getUniqueId(), (int)(numPoints * multiplier));
+                                handler.getPlayerTeam(p).addTempPoints(p, (numPoints * multiplier));
                                 p.sendMessage(ChatColor.GREEN + "Your Team Won! " + ChatColor.RESET + "[+" + numPoints * multiplier + "] " + ChatColor.GREEN + "Points!");
                                 if(roundsWon.containsKey(handler.getPlayerTeam(p))) {
                                     roundsWon.put(handler.getPlayerTeam(p), roundsWon.get(handler.getPlayerTeam(p)) + 1);

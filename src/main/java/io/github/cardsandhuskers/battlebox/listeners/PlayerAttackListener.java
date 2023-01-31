@@ -95,8 +95,8 @@ public class PlayerAttackListener implements Listener {
                     e.setCancelled(true);
                     PlayerDeathHandler deathHandler = new PlayerDeathHandler(attacked);
                     int numPoints = plugin.getConfig().getInt("killPoints");
-                    ppAPI.give(attacker.getUniqueId(), (int)(numPoints * multiplier));
-                    handler.getPlayerTeam(attacker).addTempPoints(attacker, (int)(numPoints * multiplier));
+                    //ppAPI.give(attacker.getUniqueId(), (int)(numPoints * multiplier));
+                    handler.getPlayerTeam(attacker).addTempPoints(attacker, (numPoints * multiplier));
 
                     for(Player p: handler.getPlayerTeam(attacker).getOnlinePlayers()) {
                         if(p.equals(attacker)) {

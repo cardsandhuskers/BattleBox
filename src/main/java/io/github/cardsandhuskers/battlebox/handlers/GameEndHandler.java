@@ -120,12 +120,7 @@ public class GameEndHandler {
                     for (Player p: Bukkit.getOnlinePlayers()) {
                         p.teleport(location);
                     }
-                    for(Player p:Bukkit.getOnlinePlayers()) {
-                        if(p.isOp()) {
-                            p.performCommand("startRound");
-                            break;
-                        }
-                    }
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "startRound");
                     //Unregisters the handlers to clean them up
                     HandlerList.unregisterAll(plugin);
                 },

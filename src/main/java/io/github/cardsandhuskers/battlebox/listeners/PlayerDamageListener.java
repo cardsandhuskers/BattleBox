@@ -39,8 +39,8 @@ public class PlayerDamageListener implements Listener {
                             Player attacker = s.getAttacker();
                             int numPoints = plugin.getConfig().getInt("killPoints");
 
-                            ppAPI.give(attacker.getUniqueId(), (int)(numPoints * multiplier));
-                            handler.getPlayerTeam(attacker).addTempPoints(attacker, (int)(numPoints * multiplier));
+                            //ppAPI.give(attacker.getUniqueId(), (int)(numPoints * multiplier));
+                            handler.getPlayerTeam(attacker).addTempPoints(attacker, (numPoints * multiplier));
                             
                             for(Player player: handler.getPlayerTeam(attacker).getOnlinePlayers()) {
                                 if(player.equals(attacker)) {
