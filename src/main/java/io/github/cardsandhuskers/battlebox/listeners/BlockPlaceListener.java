@@ -3,7 +3,6 @@ package io.github.cardsandhuskers.battlebox.listeners;
 import io.github.cardsandhuskers.battlebox.BattleBox;
 import io.github.cardsandhuskers.battlebox.handlers.RoundStartHandler;
 import io.github.cardsandhuskers.teams.objects.Team;
-import org.black_ixx.playerpoints.PlayerPointsAPI;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
@@ -24,12 +23,10 @@ public class BlockPlaceListener implements Listener {
     ArrayList<Block> centerBlockList;
     Plugin plugin;
     RoundStartHandler roundStartHandler;
-    PlayerPointsAPI ppAPI;
 
-    public BlockPlaceListener(RoundStartHandler roundStartHandler, Plugin plugin, PlayerPointsAPI ppAPI) {
+    public BlockPlaceListener(RoundStartHandler roundStartHandler, Plugin plugin) {
         this.plugin = plugin;
         this.roundStartHandler = roundStartHandler;
-        this.ppAPI = ppAPI;
         blockList = roundStartHandler.getBlockList();
         centerBlockList = roundStartHandler.getCenterBlockList();
     }
@@ -90,9 +87,8 @@ public class BlockPlaceListener implements Listener {
                             winningTeamsList.add(t);
                             for(Player p: t.getOnlinePlayers()) {
                                 int numPoints = plugin.getConfig().getInt("roundWinPoints")/t.getOnlinePlayers().size();
-                                //ppAPI.give(p.getUniqueId(), (int)(numPoints * multiplier));
                                 handler.getPlayerTeam(p).addTempPoints(p, (numPoints * multiplier));
-                                p.sendMessage(ChatColor.GREEN + "Your Team Won! " + ChatColor.RESET + "[+" + numPoints * multiplier + "] " + ChatColor.GREEN + "Points!");
+                                p.sendMessage(t.color + "Your Team Won! " + ChatColor.RESET + "[+" + numPoints * multiplier + "] " + ChatColor.GREEN + "Points!");
                                 if(roundsWon.containsKey(handler.getPlayerTeam(p))) {
                                     roundsWon.put(handler.getPlayerTeam(p), roundsWon.get(handler.getPlayerTeam(p)) + 1);
                                 } else {

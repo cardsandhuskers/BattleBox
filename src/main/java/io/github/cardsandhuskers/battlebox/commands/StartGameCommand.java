@@ -8,7 +8,6 @@ import io.github.cardsandhuskers.battlebox.objects.Countdown;
 import io.github.cardsandhuskers.battlebox.objects.StoredAttacker;
 import io.github.cardsandhuskers.teams.objects.Team;
 import org.apache.commons.lang3.StringUtils;
-import org.black_ixx.playerpoints.PlayerPointsAPI;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -21,20 +20,19 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static io.github.cardsandhuskers.battlebox.BattleBox.*;
 import static org.bukkit.Bukkit.getServer;
 
 public class StartGameCommand implements CommandExecutor {
     Plugin plugin;
-    PlayerPointsAPI ppAPI;
     RoundStartHandler roundStartHandler;
     public static int timeVar = 0;
     public static String timerStatus = "Game Starts in";
     ArenaWallHandler wallHandler;
-    public StartGameCommand(Plugin plugin, PlayerPointsAPI ppAPI) {
+    public StartGameCommand(Plugin plugin) {
         this.plugin = plugin;
-        this.ppAPI = ppAPI;
     }
 
     @Override
@@ -120,6 +118,9 @@ public class StartGameCommand implements CommandExecutor {
                             }
                         }
                     }, 5L);
+                    Location spawn = plugin.getConfig().getLocation("WorldSpawn");
+                    spawn.getWorld().setSpawnLocation(spawn);
+
 
 
                     for(Team t: handler.getTeams()) {
@@ -131,14 +132,21 @@ public class StartGameCommand implements CommandExecutor {
                 () -> {
                     HandlerList.unregisterAll(plugin);
                     //Register EventListeners
-                    getServer().getPluginManager().registerEvents(new PlayerAttackListener(ppAPI), plugin);
-                    getServer().getPluginManager().registerEvents(new PlayerDamageListener(ppAPI), plugin);
+                    getServer().getPluginManager().registerEvents(new PlayerAttackListener(), plugin);
+
+                    getServer().getPluginManager().registerEvents(new PlayerDamageListener(), plugin);
                     getServer().getPluginManager().registerEvents(new BlockBreakListener(roundStartHandler), plugin);
-                    getServer().getPluginManager().registerEvents(new BlockPlaceListener(roundStartHandler, plugin, ppAPI), plugin);
+                    getServer().getPluginManager().registerEvents(new BlockPlaceListener(roundStartHandler, plugin), plugin);
                     getServer().getPluginManager().registerEvents(new ArrowShootListener(), plugin);
-                    getServer().getPluginManager().registerEvents(new ArrowStopListener(), plugin);
+                    //only kills arrow entities when they hit, I don't want this to happen
+                    //getServer().getPluginManager().registerEvents(new ArrowStopListener(), plugin);
                     getServer().getPluginManager().registerEvents(new ButtonPressListener(roundStartHandler), plugin);
                     getServer().getPluginManager().registerEvents(new PlayerJoinListener(plugin), plugin);
+                    getServer().getPluginManager().registerEvents(new PlayerMoveListener(), plugin);
+
+                    HashMap<Player, Location> playerLocationMap = new HashMap<>();
+                    getServer().getPluginManager().registerEvents(new PlayerDeathListener(plugin, playerLocationMap), plugin);
+                    getServer().getPluginManager().registerEvents(new PlayerRespawnListener(plugin, playerLocationMap), plugin);
 
                     roundStartHandler.startRound();
 

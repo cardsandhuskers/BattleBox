@@ -76,12 +76,15 @@ public class TeamKits {
             ItemStack crossbow = new ItemStack(Material.CROSSBOW, 1);
             ItemMeta crossbowMeta = crossbow.getItemMeta();
             //crossbowMeta.addEnchant(Enchantment.ARROW_DAMAGE, 1, false);
-            crossbowMeta.addEnchant(Enchantment.QUICK_CHARGE, 2, false);
+            crossbowMeta.addEnchant(Enchantment.QUICK_CHARGE, 1, false);
             crossbowMeta.addEnchant(Enchantment.MULTISHOT, 1, false);
             crossbowMeta.setDisplayName("Marksman's Crossbow");
             crossbowMeta.setUnbreakable(true);
             crossbow.setItemMeta(crossbowMeta);
             inv.setItem(2, crossbow);
+
+            ItemStack arrow = new ItemStack(Material.ARROW, 12);
+            inv.setItem(17, arrow);
 
             removePlayer(p);
             marksmanSelected = true;
@@ -373,7 +376,7 @@ public class TeamKits {
         crossbow.setItemMeta(crossbowMeta);
         inv.setItem(1, crossbow);
 
-        ItemStack arrow = new ItemStack(Material.ARROW, 12);
+        ItemStack arrow = new ItemStack(Material.ARROW, 8);
         inv.setItem(17, arrow);
     }
     public void healPlayer(Player p) {

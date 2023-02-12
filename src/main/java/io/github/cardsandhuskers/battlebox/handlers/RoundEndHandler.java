@@ -6,8 +6,12 @@ import io.github.cardsandhuskers.teams.objects.Team;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.Collection;
 
 import static io.github.cardsandhuskers.battlebox.BattleBox.*;
 
@@ -66,6 +70,12 @@ public class RoundEndHandler {
                     round++;
                     roundStartHandler.startRound();
                     winningTeamsList.clear();
+                    Collection<Entity> entityList = plugin.getConfig().getLocation("WorldSpawn").getWorld().getEntities();
+                    for (Entity e : entityList) {
+                        if (e.getType() != EntityType.PLAYER && e.getType() != EntityType.ITEM_FRAME) {
+                            e.remove();
+                        }
+                    }
                 },
 
                 //Each Second

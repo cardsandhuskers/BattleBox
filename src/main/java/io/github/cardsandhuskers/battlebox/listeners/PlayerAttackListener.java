@@ -1,28 +1,22 @@
 package io.github.cardsandhuskers.battlebox.listeners;
 
 import io.github.cardsandhuskers.battlebox.BattleBox;
-import io.github.cardsandhuskers.battlebox.handlers.PlayerDeathHandler;
 import io.github.cardsandhuskers.battlebox.objects.StoredAttacker;
 import io.github.cardsandhuskers.teams.objects.Team;
-import org.black_ixx.playerpoints.PlayerPointsAPI;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Sound;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.potion.Potion;
 
 import static io.github.cardsandhuskers.battlebox.BattleBox.*;
 import static io.github.cardsandhuskers.battlebox.commands.StartGameCommand.timerStatus;
 
 
 public class PlayerAttackListener implements Listener {
-    private PlayerPointsAPI ppAPI;
     private BattleBox plugin = (BattleBox) Bukkit.getPluginManager().getPlugin("BattleBox");
-    public PlayerAttackListener(PlayerPointsAPI ppAPI) {
-        this.ppAPI = ppAPI;
+    public PlayerAttackListener() {
+
     }
 
     /**
@@ -89,29 +83,6 @@ public class PlayerAttackListener implements Listener {
                 if(!found) {
                     StoredAttacker storedAttacker = new StoredAttacker(attacker, attacked);
                     storedAttackers.add(storedAttacker);
-                }
-
-                if (attacked.getHealth() - e.getDamage() <= 0) {
-                    e.setCancelled(true);
-                    PlayerDeathHandler deathHandler = new PlayerDeathHandler(attacked);
-                    int numPoints = plugin.getConfig().getInt("killPoints");
-                    //ppAPI.give(attacker.getUniqueId(), (int)(numPoints * multiplier));
-                    handler.getPlayerTeam(attacker).addTempPoints(attacker, (numPoints * multiplier));
-
-                    for(Player p: handler.getPlayerTeam(attacker).getOnlinePlayers()) {
-                        if(p.equals(attacker)) {
-                            p.sendMessage("[+" + numPoints * multiplier + " points] " + handler.getPlayerTeam(attacked).color + attacked.getName() + ChatColor.RESET + " was killed by " + handler.getPlayerTeam(attacker).color + attacker.getName());
-                        } else {
-                            p.sendMessage(handler.getPlayerTeam(attacked).color + attacked.getName() + ChatColor.RESET + " was killed by " + handler.getPlayerTeam(attacker).color + attacker.getName());
-                        }
-
-                    }
-                    for(Player p: handler.getPlayerTeam(attacked).getOnlinePlayers()) {
-                        p.sendMessage(handler.getPlayerTeam(attacked).color + attacked.getName() + ChatColor.RESET + " was killed by " + handler.getPlayerTeam(attacker).color + attacker.getName());
-
-                    }
-                    attacker.playSound(attacker.getLocation(), Sound.ENTITY_LIGHTNING_BOLT_IMPACT, 1f, 2f);
-                    attacker.sendTitle("Killed " + handler.getPlayerTeam(attacked).color + attacked.getName(), "", 2, 16, 2);
                 }
             }
         }

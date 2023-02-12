@@ -6,8 +6,6 @@ import io.github.cardsandhuskers.battlebox.objects.StoredAttacker;
 import io.github.cardsandhuskers.teams.Teams;
 import io.github.cardsandhuskers.teams.handlers.TeamHandler;
 import io.github.cardsandhuskers.teams.objects.Team;
-import org.black_ixx.playerpoints.PlayerPoints;
-import org.black_ixx.playerpoints.PlayerPointsAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -17,7 +15,6 @@ import java.util.HashMap;
 
 
 public final class BattleBox extends JavaPlugin {
-    private PlayerPointsAPI ppAPI;
     public static TeamHandler handler;
     public static int round;
     public static ArrayList<Block> completedArenasList = new ArrayList<>();
@@ -31,14 +28,6 @@ public final class BattleBox extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
-        //APIs
-        if (Bukkit.getPluginManager().isPluginEnabled("PlayerPoints")) {
-            this.ppAPI = PlayerPoints.getInstance().getAPI();
-        } else {
-            System.out.println("Could not find PlayerPointsAPI! This plugin is required.");
-            Bukkit.getPluginManager().disablePlugin(this);
-        }
-
 
         //Placeholder API validation
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
@@ -65,7 +54,7 @@ public final class BattleBox extends JavaPlugin {
         saveDefaultConfig();
 
         //Register Commands
-        getCommand("startBattleBox").setExecutor(new StartGameCommand(this, ppAPI));
+        getCommand("startBattleBox").setExecutor(new StartGameCommand(this));
         getCommand("setBattleboxSpawn").setExecutor(new SetWorldSpawnCommand(this));
         getCommand("setBattleboxArena").setExecutor(new SetArenaCommand(this));
         getCommand("setBattleboxArenaSpawn").setExecutor(new SetArenaSpawnCommand(this));
