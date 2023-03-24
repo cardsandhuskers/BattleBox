@@ -7,6 +7,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileHitEvent;
 
+/**
+ * @deprecated
+ */
 public class ArrowStopListener implements Listener {
 
     @EventHandler

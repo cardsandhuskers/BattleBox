@@ -60,7 +60,7 @@ public class RoundEndHandler {
                 5,
                 //Timer Start
                 () -> {
-                    StartGameCommand.timerStatus = "Next Round in";
+                    gameState = GameState.ROUND_OVER;
                 },
 
                 //Timer End

@@ -10,7 +10,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import static io.github.cardsandhuskers.battlebox.BattleBox.*;
-import static io.github.cardsandhuskers.battlebox.commands.StartGameCommand.timerStatus;
 
 
 public class PlayerAttackListener implements Listener {
@@ -60,7 +59,7 @@ public class PlayerAttackListener implements Listener {
      * @param e
      */
     public void damage(Player attacker, Player attacked, EntityDamageByEntityEvent e) {
-        if(!timerStatus.equals("Round ends in")) e.setCancelled(true);
+        if(gameState != GameState.ROUND_ACTIVE) e.setCancelled(true);
         //handle error if someone's team is null
         if (!(handler.getPlayerTeam(attacker) == null || handler.getPlayerTeam(attacked) == null)) {
             if (handler.getPlayerTeam(attacker).equals(handler.getPlayerTeam(attacked))) {

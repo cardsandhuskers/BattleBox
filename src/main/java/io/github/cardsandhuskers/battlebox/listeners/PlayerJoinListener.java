@@ -19,7 +19,6 @@ public class PlayerJoinListener implements Listener {
 
     @EventHandler
     public void playerJoinEvent(PlayerJoinEvent e) {
-        System.out.println("JOINED");
         Player p = e.getPlayer();
         p.teleport(plugin.getConfig().getLocation("WorldSpawn"));
         Inventory inv = p.getInventory();

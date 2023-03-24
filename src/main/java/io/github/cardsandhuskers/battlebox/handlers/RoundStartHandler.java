@@ -4,7 +4,6 @@ import io.github.cardsandhuskers.battlebox.BattleBox;
 import io.github.cardsandhuskers.battlebox.commands.StartGameCommand;
 import io.github.cardsandhuskers.battlebox.objects.Bracket;
 import io.github.cardsandhuskers.battlebox.objects.Countdown;
-import io.github.cardsandhuskers.battlebox.objects.StoredAttacker;
 import io.github.cardsandhuskers.battlebox.objects.TeamKits;
 import io.github.cardsandhuskers.teams.objects.Team;
 import org.bukkit.*;
@@ -168,7 +167,7 @@ public class RoundStartHandler {
                             }
                         }
                     }
-                    StartGameCommand.timerStatus = "Kit Selection";
+                    gameState = GameState.KIT_SELECTION;
                     teleporter.teleportToKitRooms(matchups);
 
                 },
@@ -214,7 +213,7 @@ public class RoundStartHandler {
                 plugin.getConfig().getInt("RoundPrepTime"),
                 //Timer Start
                 () -> {
-                    StartGameCommand.timerStatus = "Battle Begins in";
+                    gameState = GameState.GAME_STARTING;
                     Bukkit.broadcastMessage(ChatColor.RED + "Box Opening Soon!");
                     teleporter.teleportToArenas();
                 },
@@ -257,7 +256,7 @@ public class RoundStartHandler {
                 plugin.getConfig().getInt("RoundTime"),
                 //Timer Start
                 () -> {
-                    StartGameCommand.timerStatus = "Round ends in";
+                    gameState = GameState.ROUND_ACTIVE;
                 },
 
                 //Timer End

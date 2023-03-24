@@ -21,6 +21,7 @@ public final class BattleBox extends JavaPlugin {
     public static ArrayList<Team> winningTeamsList = new ArrayList<>();
     public static ArrayList<StoredAttacker> storedAttackers = new ArrayList<>();
     public static HashMap<Team, Integer> roundsWon = new HashMap<>();
+    public static GameState gameState;
 
     public static float multiplier = 1;
 
@@ -63,13 +64,19 @@ public final class BattleBox extends JavaPlugin {
         getCommand("setBattleboxArenaWall").setExecutor(new SetArenaWallCommand(this));
 
         //Events Are registered in the StartGameCommand
-
-        saveDefaultConfig();
-        getConfig().options().copyDefaults(true);
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
     }
+    public enum GameState {
+        GAME_STARTING,
+        ROUND_STARTING,
+        KIT_SELECTION,
+        ROUND_ACTIVE,
+        ROUND_OVER,
+        GAME_OVER
+    }
 }
+

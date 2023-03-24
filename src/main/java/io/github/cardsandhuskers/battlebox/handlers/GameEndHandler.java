@@ -4,7 +4,6 @@ import io.github.cardsandhuskers.battlebox.commands.StartGameCommand;
 import io.github.cardsandhuskers.battlebox.objects.Countdown;
 import io.github.cardsandhuskers.teams.objects.Team;
 import io.github.cardsandhuskers.teams.objects.TempPointsHolder;
-import org.apache.commons.lang3.StringUtils;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
@@ -29,7 +28,7 @@ public class GameEndHandler {
                 plugin.getConfig().getInt("GameEndTime"),
                 //Timer Start
                 () -> {
-                    StartGameCommand.timerStatus = "Return to Lobby";
+                    gameState = GameState.GAME_OVER;
                     roundsWon.clear();
                 },
 

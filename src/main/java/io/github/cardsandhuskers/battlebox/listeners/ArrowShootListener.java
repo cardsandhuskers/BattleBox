@@ -8,6 +8,9 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+/**
+ * @deprecated
+ */
 public class ArrowShootListener implements Listener {
 
     @EventHandler

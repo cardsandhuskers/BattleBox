@@ -1,7 +1,6 @@
 package io.github.cardsandhuskers.battlebox.objects;
 
 import io.github.cardsandhuskers.battlebox.BattleBox;
-import io.github.cardsandhuskers.battlebox.commands.StartGameCommand;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -43,7 +42,14 @@ public class Placeholder extends PlaceholderExpansion {
             return mins + ":" + seconds;
         }
         if(s.equalsIgnoreCase("timerstage")) {
-            return StartGameCommand.timerStatus;
+            switch (gameState) {
+                case GAME_STARTING: return "Game Starts in";
+                case KIT_SELECTION: return "Kit Selection";
+                case ROUND_STARTING: return "Round Starts";
+                case ROUND_ACTIVE: return "Round Ends";
+                case ROUND_OVER: return "Next Round";
+                case GAME_OVER: return "Return to Lobby";
+            }
         }
         if(s.equalsIgnoreCase("round")) {
             int currentRound;

@@ -43,11 +43,11 @@ public class Bracket {
 
         //iterate through all the rounds
         for (int round = 0; round < numrounds; round++) {
-            System.out.println("round {" + Integer.toString(round + 1) + "}");
+            //System.out.println("round {" + Integer.toString(round + 1) + "}");
 
             int teamIdx = round % teamsSize;
 
-            System.out.println("{" + teams.get(teamIdx) + "} vs {" + teamArray.get(0) + "}");
+            //System.out.println("{" + teams.get(teamIdx) + "} vs {" + teamArray.get(0) + "}");
             if(round + 1 == selectedRound) {
                 selectedMatchups[0][0] = teams.get(teamIdx);
                 selectedMatchups[0][1] = teamArray.get(0);
@@ -56,7 +56,7 @@ public class Bracket {
             for (int idx = 1; idx < halfSize; idx++) {
                 int firstTeam = (round + idx) % teamsSize;
                 int secondTeam = (round  + teamsSize - idx) % teamsSize;
-                System.out.println("{" + teams.get(firstTeam).getTeamName() + "} vs {" + teams.get(secondTeam).getTeamName() + "}");
+                //System.out.println("{" + teams.get(firstTeam).getTeamName() + "} vs {" + teams.get(secondTeam).getTeamName() + "}");
                 if(round + 1 == selectedRound) {
                     selectedMatchups[idx][0] = teams.get(firstTeam);
                     selectedMatchups[idx][1] = teams.get(secondTeam);
