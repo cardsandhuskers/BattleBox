@@ -42,8 +42,9 @@ public class PlayerDeathListener implements Listener {
         if(cause.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
             if(e.getEntity().getKiller().getType() == EntityType.PLAYER) {
                 Player attacker = e.getEntity().getKiller();
-
                 int numPoints = plugin.getConfig().getInt("killPoints");
+                addKill(attacker);
+
                 handler.getPlayerTeam(attacker).addTempPoints(attacker, (numPoints * multiplier));
                 for(Player p: handler.getPlayerTeam(attacker).getOnlinePlayers()) {
                     if(p.equals(attacker)) {
@@ -68,6 +69,8 @@ public class PlayerDeathListener implements Listener {
                     isAttacked = true;
                     Player attacker = s.getAttacker();
                     int numPoints = plugin.getConfig().getInt("killPoints");
+                    addKill(attacker);
+
                     handler.getPlayerTeam(attacker).addTempPoints(attacker, (numPoints * multiplier));
                     //send kill message to attacker and their team
                     for(Player player: handler.getPlayerTeam(attacker).getOnlinePlayers()) {
@@ -91,5 +94,10 @@ public class PlayerDeathListener implements Listener {
                 }
             }
         }
+    }
+
+    public void addKill(Player attacker) {
+        if(killsMap.containsKey(attacker)) killsMap.put(attacker, killsMap.get(attacker) + 1);
+        else killsMap.put(attacker, 1);
     }
 }

@@ -102,6 +102,8 @@ public class StartGameCommand implements CommandExecutor {
                     for(Player p: Bukkit.getOnlinePlayers()) {
                         p.teleport(location);
                     }
+                    killsMap = new HashMap<>();
+                    roundsWon = new HashMap<>();
                     getServer().getPluginManager().registerEvents(new PregamePlayerAttackListener(), plugin);
                     getServer().getPluginManager().registerEvents(new PlayerJoinListener(plugin), plugin);
 
@@ -122,6 +124,9 @@ public class StartGameCommand implements CommandExecutor {
 
                     for(Team t: handler.getTeams()) {
                         t.resetTempPoints();
+                        for(Player p:t.getOnlinePlayers()) {
+                            killsMap.put(p, 0);
+                        }
                     }
                 },
 
@@ -144,6 +149,7 @@ public class StartGameCommand implements CommandExecutor {
                     HashMap<Player, Location> playerLocationMap = new HashMap<>();
                     getServer().getPluginManager().registerEvents(new PlayerDeathListener(plugin, playerLocationMap), plugin);
                     getServer().getPluginManager().registerEvents(new PlayerRespawnListener(plugin, playerLocationMap), plugin);
+
 
                     roundStartHandler.startRound();
 

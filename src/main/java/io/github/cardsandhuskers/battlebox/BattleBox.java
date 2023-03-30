@@ -2,12 +2,14 @@ package io.github.cardsandhuskers.battlebox;
 
 import io.github.cardsandhuskers.battlebox.commands.*;
 import io.github.cardsandhuskers.battlebox.objects.Placeholder;
+import io.github.cardsandhuskers.battlebox.objects.StatCalculator;
 import io.github.cardsandhuskers.battlebox.objects.StoredAttacker;
 import io.github.cardsandhuskers.teams.Teams;
 import io.github.cardsandhuskers.teams.handlers.TeamHandler;
 import io.github.cardsandhuskers.teams.objects.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -21,7 +23,9 @@ public final class BattleBox extends JavaPlugin {
     public static ArrayList<Team> winningTeamsList = new ArrayList<>();
     public static ArrayList<StoredAttacker> storedAttackers = new ArrayList<>();
     public static HashMap<Team, Integer> roundsWon = new HashMap<>();
+    public static HashMap<Player, Integer> killsMap = new HashMap<>();
     public static GameState gameState;
+    public StatCalculator statCalculator;
 
     public static float multiplier = 1;
 
@@ -62,6 +66,17 @@ public final class BattleBox extends JavaPlugin {
         getCommand("setBattleboxKitSpawn").setExecutor(new SetArenaKitSelectionCommand(this));
         getCommand("setLobby").setExecutor(new SetLobbyCommand(this));
         getCommand("setBattleboxArenaWall").setExecutor(new SetArenaWallCommand(this));
+
+        statCalculator = new StatCalculator(this);
+        try {
+            statCalculator.calculateStats();
+        } catch (Exception e) {
+            StackTraceElement[] trace = e.getStackTrace();
+            String str = "";
+            for(StackTraceElement element:trace) str += element.toString() + "\n";
+            this.getLogger().severe("ERROR Calculating Stats!\n" + str);
+        }
+
 
         //Events Are registered in the StartGameCommand
     }

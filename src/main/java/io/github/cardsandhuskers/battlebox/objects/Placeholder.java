@@ -2,8 +2,12 @@ package io.github.cardsandhuskers.battlebox.objects;
 
 import io.github.cardsandhuskers.battlebox.BattleBox;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
 
 import static io.github.cardsandhuskers.battlebox.BattleBox.*;
 import static io.github.cardsandhuskers.battlebox.commands.StartGameCommand.timeVar;
@@ -73,6 +77,50 @@ public class Placeholder extends PlaceholderExpansion {
                 return 0 + "";
             }
         }
+
+        String[] values = s.split("_");
+        //playerKills, totalKills, wins
+        // lb pos
+        //playerKills_1
+        try {
+            if (values[0].equalsIgnoreCase("playerKills")) {
+                ArrayList<StatCalculator.SingleGameKillsHolder> killsHolders = plugin.statCalculator.getSGKillsHolders();
+                if(Integer.parseInt(values[1]) > killsHolders.size()) return  "";
+                StatCalculator.SingleGameKillsHolder holder = killsHolders.get(Integer.parseInt(values[1]) - 1);
+
+                String color = "";
+                if (handler.getPlayerTeam(Bukkit.getPlayer(holder.name)) != null)
+                    color = handler.getPlayerTeam(Bukkit.getPlayer(holder.name)).color;
+                return color + holder.name + ChatColor.RESET + " Event " + holder.eventNum + ": " + holder.kills;
+
+
+            }
+            if (values[0].equalsIgnoreCase("totalKills")) {
+                ArrayList<StatCalculator.PlayerStatsHolder> killsHolders = plugin.statCalculator.getStatsHolders(StatCalculator.PlayerStatsComparator.SortType.KILLS);
+                if(Integer.parseInt(values[1]) > killsHolders.size()) return  "";
+                StatCalculator.PlayerStatsHolder holder = killsHolders.get(Integer.parseInt(values[1]) - 1);
+                String color = "";
+                if (handler.getPlayerTeam(Bukkit.getPlayer(holder.name)) != null)
+                    color = handler.getPlayerTeam(Bukkit.getPlayer(holder.name)).color;
+                return color + holder.name + ChatColor.RESET + ": " + holder.kills;
+            }
+            if (values[0].equalsIgnoreCase("wins")) {
+                ArrayList<StatCalculator.PlayerStatsHolder> killsHolders = plugin.statCalculator.getStatsHolders(StatCalculator.PlayerStatsComparator.SortType.WINS);
+                if(Integer.parseInt(values[1]) > killsHolders.size()) return  "";
+                StatCalculator.PlayerStatsHolder holder = killsHolders.get(Integer.parseInt(values[1]) - 1);
+                String color = "";
+                if (handler.getPlayerTeam(Bukkit.getPlayer(holder.name)) != null)
+                    color = handler.getPlayerTeam(Bukkit.getPlayer(holder.name)).color;
+                return color + holder.name + ChatColor.RESET + ": " + holder.kills;
+            }
+        } catch (Exception e) {
+            StackTraceElement[] trace = e.getStackTrace();
+            String str = "";
+            for(StackTraceElement element:trace) str += element.toString() + "\n";
+            plugin.getLogger().severe("Error with Placeholder!\n" + str);
+        }
+
+
         return null;
     }
 }
