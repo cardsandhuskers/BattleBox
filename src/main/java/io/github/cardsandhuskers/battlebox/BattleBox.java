@@ -24,7 +24,7 @@ public final class BattleBox extends JavaPlugin {
     public static ArrayList<StoredAttacker> storedAttackers = new ArrayList<>();
     public static HashMap<Team, Integer> roundsWon = new HashMap<>();
     public static HashMap<Player, Integer> killsMap = new HashMap<>();
-    public static GameState gameState;
+    public static GameState gameState = GameState.GAME_STARTING;
     public StatCalculator statCalculator;
 
     public static float multiplier = 1;
