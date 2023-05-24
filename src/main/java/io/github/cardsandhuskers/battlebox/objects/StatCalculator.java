@@ -23,6 +23,7 @@ public class StatCalculator {
     public void calculateStats() throws Exception {
         HashMap<String, PlayerStatsHolder> playerStatsMap = new HashMap<>();
         sgKillsHolders = new ArrayList<>();
+        playerStatsHolders = new ArrayList<>();
 
         FileReader reader = null;
         try {
@@ -80,17 +81,22 @@ public class StatCalculator {
 
 
     public ArrayList<PlayerStatsHolder> getStatsHolders(PlayerStatsComparator.SortType sortType) {
+
+        ArrayList<PlayerStatsHolder> psh= new ArrayList<>(playerStatsHolders);
+
         Comparator PlayerStatsCompare = new PlayerStatsComparator(sortType);
-        playerStatsHolders.sort(PlayerStatsCompare);
-        Collections.reverse(playerStatsHolders);
-        return new ArrayList<>(playerStatsHolders);
+        psh.sort(PlayerStatsCompare);
+        Collections.reverse(psh);
+        return new ArrayList<>(psh);
     }
 
     public ArrayList<SingleGameKillsHolder> getSGKillsHolders() {
+        ArrayList<SingleGameKillsHolder> sgkh= new ArrayList<>(sgKillsHolders);
+
         Comparator SGKHComparator = new SGKHComparator();
-        sgKillsHolders.sort(SGKHComparator);
-        Collections.reverse(sgKillsHolders);
-        return new ArrayList<>(sgKillsHolders);
+        sgkh.sort(SGKHComparator);
+        Collections.reverse(sgkh);
+        return sgkh;
     }
 
 

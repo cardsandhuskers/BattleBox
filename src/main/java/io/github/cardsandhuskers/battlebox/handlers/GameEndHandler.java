@@ -37,6 +37,7 @@ public class GameEndHandler {
                 //Timer Start
                 () -> {
                     gameState = GameState.GAME_OVER;
+                    Bukkit.getScoreboardManager().getMainScoreboard().getObjective("belowNameHP").unregister();
                 },
 
                 //Timer End

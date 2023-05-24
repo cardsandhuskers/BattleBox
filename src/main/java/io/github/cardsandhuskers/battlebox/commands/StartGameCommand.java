@@ -15,6 +15,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.Criterias;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -152,7 +156,10 @@ public class StartGameCommand implements CommandExecutor {
 
 
                     roundStartHandler.startRound();
-
+                    Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+                    if(scoreboard.getObjective("belowNameHP") != null) scoreboard.getObjective("belowNameHP").unregister();
+                    Objective belowNameHP = scoreboard.registerNewObjective("belowNameHP", Criterias.HEALTH, ChatColor.DARK_RED + "❤");
+                    belowNameHP.setDisplaySlot(DisplaySlot.BELOW_NAME);
                 },
 
                 //Each Second
