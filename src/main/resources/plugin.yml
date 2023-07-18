@@ -2,7 +2,8 @@ name: BattleBox
 version: '${project.version}'
 main: io.github.cardsandhuskers.battlebox.BattleBox
 api-version: 1.19
-depend: [PlaceholderAPI, Teams]
+depend: [Teams]
+softdepend: [Multiverse-Core, PlaceholderAPI]
 commands:
   startBattleBox:
     description: starts the game

@@ -18,11 +18,15 @@ import static io.github.cardsandhuskers.battlebox.BattleBox.*;
 public class RoundEndHandler {
     private Plugin plugin;
     private RoundStartHandler roundStartHandler;
+    private Countdown roundOverTimer;
     public RoundEndHandler(Plugin plugin, RoundStartHandler roundStartHandler) {
         this.plugin = plugin;
         this.roundStartHandler = roundStartHandler;
     }
 
+    public void cancelTimers() {
+        if(roundOverTimer != null) roundOverTimer.cancelTimer();
+    }
     public void endRound() {
 
         Team[][] matchups = roundStartHandler.getMatchups();
@@ -56,7 +60,7 @@ public class RoundEndHandler {
      * Timer to put a pause between rounds
      */
     public void roundOverTimer() {
-        Countdown timer = new Countdown((JavaPlugin)plugin,
+        roundOverTimer = new Countdown((JavaPlugin)plugin,
                 5,
                 //Timer Start
                 () -> {
@@ -89,6 +93,6 @@ public class RoundEndHandler {
         );
 
         // Start scheduling, don't use the "run" method unless you want to skip a second
-        timer.scheduleTimer();
+        roundOverTimer.scheduleTimer();
     }
 }

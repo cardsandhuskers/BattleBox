@@ -15,10 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.Criterias;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -29,6 +26,7 @@ import static org.bukkit.Bukkit.getServer;
 public class StartGameCommand implements CommandExecutor {
     Plugin plugin;
     RoundStartHandler roundStartHandler;
+    private Countdown pregameTimer;
     public static int timeVar = 0;
     //public static String timerStatus = "Game Starts in";
     ArenaWallHandler wallHandler;
@@ -96,7 +94,7 @@ public class StartGameCommand implements CommandExecutor {
      */
     public void startPregameCountdown() {
         int totalSeconds = plugin.getConfig().getInt("PregameTime");
-        Countdown timer = new Countdown((JavaPlugin)plugin,
+        pregameTimer = new Countdown((JavaPlugin)plugin,
                 //should be 80
                 totalSeconds,
                 //Timer Start
@@ -158,7 +156,7 @@ public class StartGameCommand implements CommandExecutor {
                     roundStartHandler.startRound();
                     Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
                     if(scoreboard.getObjective("belowNameHP") != null) scoreboard.getObjective("belowNameHP").unregister();
-                    Objective belowNameHP = scoreboard.registerNewObjective("belowNameHP", Criterias.HEALTH, ChatColor.DARK_RED + "❤");
+                    Objective belowNameHP = scoreboard.registerNewObjective("belowNameHP", Criteria.HEALTH, ChatColor.DARK_RED + "❤");
                     belowNameHP.setDisplaySlot(DisplaySlot.BELOW_NAME);
                 },
 
@@ -201,8 +199,17 @@ public class StartGameCommand implements CommandExecutor {
         );
 
         // Start scheduling, don't use the "run" method unless you want to skip a second
-        timer.scheduleTimer();
+        pregameTimer.scheduleTimer();
 
+    }
+    public boolean cancelTimers() {
+        if(pregameTimer != null) {
+            pregameTimer.cancelTimer();
+            roundStartHandler.cancelTimers();
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

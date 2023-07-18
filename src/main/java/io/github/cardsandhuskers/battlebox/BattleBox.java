@@ -47,8 +47,8 @@ public final class BattleBox extends JavaPlugin {
              * We inform about the fact that PlaceholderAPI isn't installed and then
              * disable this plugin to prevent issues.
              */
-            System.out.println("Could not find PlaceholderAPI! This plugin is required.");
-            Bukkit.getPluginManager().disablePlugin(this);
+            System.out.println("Could not find PlaceholderAPI!");
+            //Bukkit.getPluginManager().disablePlugin(this);
         }
 
         handler = Teams.handler;
@@ -59,13 +59,16 @@ public final class BattleBox extends JavaPlugin {
         saveDefaultConfig();
 
         //Register Commands
-        getCommand("startBattleBox").setExecutor(new StartGameCommand(this));
+        StartGameCommand startGameCommand = new StartGameCommand(this);
+        getCommand("startBattleBox").setExecutor(startGameCommand);
         getCommand("setBattleboxSpawn").setExecutor(new SetWorldSpawnCommand(this));
         getCommand("setBattleboxArena").setExecutor(new SetArenaCommand(this));
         getCommand("setBattleboxArenaSpawn").setExecutor(new SetArenaSpawnCommand(this));
         getCommand("setBattleboxKitSpawn").setExecutor(new SetArenaKitSelectionCommand(this));
         getCommand("setLobby").setExecutor(new SetLobbyCommand(this));
         getCommand("setBattleboxArenaWall").setExecutor(new SetArenaWallCommand(this));
+        getCommand("cancelBattlebox").setExecutor(new CancelGame(this, startGameCommand));
+        getCommand("reloadBattlebox").setExecutor(new ReloadConfig(this));
 
         statCalculator = new StatCalculator(this);
         try {

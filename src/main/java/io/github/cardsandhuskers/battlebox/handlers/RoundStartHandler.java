@@ -20,7 +20,13 @@ public class RoundStartHandler {
     private BattleBox plugin;
     private ArrayList<Block> blockList;
     private ArrayList<Block> centerBlockList;
+
+
+    private Countdown kitTimer;
+    private Countdown pregameTimer;
     private Countdown inGameTimer;
+
+
     private PlayerTeleportHandler teleporter;
     private ArrayList<TeamKits> teamKitsList;
     Bracket bracket;
@@ -40,6 +46,14 @@ public class RoundStartHandler {
         //matchups = bracket.getMatchups(handler.getTeams(), round);
         teleporter = new PlayerTeleportHandler(plugin, matchups);
         teamKitsList = new ArrayList<>();
+    }
+
+
+    public void cancelTimers() {
+        if(kitTimer != null) kitTimer.cancelTimer();
+        if(pregameTimer != null) pregameTimer.cancelTimer();
+        if(inGameTimer != null) inGameTimer.cancelTimer();
+        roundEndHandler.cancelTimers();
     }
 
     /**
@@ -148,7 +162,7 @@ public class RoundStartHandler {
      */
     public void initKitTimer() {
         int totalTime = plugin.getConfig().getInt("KitTime");
-        Countdown timer = new Countdown((JavaPlugin)plugin,
+        kitTimer = new Countdown((JavaPlugin)plugin,
                 totalTime,
                 //Timer Start
                 () -> {
@@ -202,14 +216,14 @@ public class RoundStartHandler {
         );
 
         // Start scheduling, don't use the "run" method unless you want to skip a second
-        timer.scheduleTimer();
+        kitTimer.scheduleTimer();
     }
 
     /**
      * 5-second countdown to game start
      */
     public void initGameCountdownTimer() {
-        Countdown timer = new Countdown((JavaPlugin)plugin,
+        pregameTimer = new Countdown((JavaPlugin)plugin,
                 plugin.getConfig().getInt("RoundPrepTime"),
                 //Timer Start
                 () -> {
@@ -245,7 +259,7 @@ public class RoundStartHandler {
         );
 
         // Start scheduling, don't use the "run" method unless you want to skip a second
-        timer.scheduleTimer();
+        pregameTimer.scheduleTimer();
     }
 
     /**
