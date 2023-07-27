@@ -162,7 +162,7 @@ public class BlockPlaceListener implements Listener {
             case BLUE_WOOL:
             case LIME_WOOL:
             case RED_WOOL:
-            case MAGENTA_WOOL:
+            case PINK_WOOL:
             case YELLOW_WOOL:
             case WHITE_WOOL: return true;
             default: return false;
@@ -186,7 +186,7 @@ public class BlockPlaceListener implements Listener {
             case LIME_WOOL: return "§a";
             case LIGHT_BLUE_WOOL: return "§b";
             case RED_WOOL: return "§c";
-            case MAGENTA_WOOL: return "§d";
+            case PINK_WOOL: return "§d";
             case YELLOW_WOOL: return "§e";
             case WHITE_WOOL: return "§f";
             default: return null;

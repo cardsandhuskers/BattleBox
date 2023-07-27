@@ -44,11 +44,11 @@ public class PlayerAttackListener implements Listener {
                 ThrownPotion potion = (ThrownPotion) e.getDamager();
                 attacker = (Player) potion.getShooter();
                 damage(attacker, attacked, e);
-            }else {
-                e.setCancelled(true);
+            } else {
+                //e.setCancelled(true);
             }
         } else {
-            e.setCancelled(true);
+            //e.setCancelled(true);
         }
     }
 

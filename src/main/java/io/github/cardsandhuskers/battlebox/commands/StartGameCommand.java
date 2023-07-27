@@ -5,6 +5,7 @@ import io.github.cardsandhuskers.battlebox.handlers.ArenaWallHandler;
 import io.github.cardsandhuskers.battlebox.handlers.RoundStartHandler;
 import io.github.cardsandhuskers.battlebox.listeners.*;
 import io.github.cardsandhuskers.battlebox.objects.Countdown;
+import io.github.cardsandhuskers.battlebox.objects.GameMessages;
 import io.github.cardsandhuskers.teams.objects.Team;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.*;
@@ -147,6 +148,7 @@ public class StartGameCommand implements CommandExecutor {
                     getServer().getPluginManager().registerEvents(new ButtonPressListener(roundStartHandler), plugin);
                     getServer().getPluginManager().registerEvents(new PlayerJoinListener(plugin), plugin);
                     getServer().getPluginManager().registerEvents(new PlayerMoveListener(), plugin);
+                    getServer().getPluginManager().registerEvents(new PlayerThrowListener(), plugin);
 
                     HashMap<Player, Location> playerLocationMap = new HashMap<>();
                     getServer().getPluginManager().registerEvents(new PlayerDeathListener(plugin, playerLocationMap), plugin);
@@ -158,35 +160,14 @@ public class StartGameCommand implements CommandExecutor {
                     if(scoreboard.getObjective("belowNameHP") != null) scoreboard.getObjective("belowNameHP").unregister();
                     Objective belowNameHP = scoreboard.registerNewObjective("belowNameHP", Criteria.HEALTH, ChatColor.DARK_RED + "❤");
                     belowNameHP.setDisplaySlot(DisplaySlot.BELOW_NAME);
+
                 },
 
                 //Each Second
                 (t) -> {
-                    if(t.getSecondsLeft() == totalSeconds - 1) {
-                        Bukkit.broadcastMessage(ChatColor.STRIKETHROUGH + "----------------------------------------");
-                        Bukkit.broadcastMessage(StringUtils.center(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "Battle Box", 30));
-                        Bukkit.broadcastMessage(ChatColor.BLUE + "" + ChatColor.BOLD + "How To Play:");
-                        Bukkit.broadcastMessage("You will be placed in an arena against the other teams in a round robin format." +
-                                "\nYou must replace the wool in the center with your color wool to win the round." +
-                                "\nKill your opponents, or don't, it's up to you! All that matters is that you build the wool.");
-                        Bukkit.broadcastMessage(ChatColor.STRIKETHROUGH + "----------------------------------------");
-                    }
-                    if(t.getSecondsLeft() == totalSeconds - 10) {
-                        Bukkit.broadcastMessage(ChatColor.STRIKETHROUGH + "----------------------------------------");
-                        Bukkit.broadcastMessage(ChatColor.DARK_GREEN + "" + ChatColor.BOLD + "This Game Has the Following Kits:");
-                        Bukkit.broadcastMessage("The " + ChatColor.LIGHT_PURPLE + "marksman" + ChatColor.RESET + " kit adds a multishot 3 crossbow to your arsenal! A great way to provide covering fire." +
-                                                "\nThe " + ChatColor.DARK_AQUA + "potion master" + ChatColor.RESET + " kit gives you 2 harming, 2 healing, and 1 poison potion! Use them wisely." +
-                                                "\nThe " + ChatColor.BLUE + "swordsman" + ChatColor.RESET + " kit gives you an iron sword! You can do big damage with your sword." +
-                                                "\nThe " + ChatColor.RED + "armorer" + ChatColor.RESET + " kit adds protection 2 leather chestplate and leggings, with knockback resistance! Use it to tank damage.");
-                        Bukkit.broadcastMessage(ChatColor.STRIKETHROUGH + "----------------------------------------");
-                    }
-                    if(t.getSecondsLeft() == totalSeconds - 20) {
-                        Bukkit.broadcastMessage(ChatColor.STRIKETHROUGH + "----------------------------------------");
-                        Bukkit.broadcastMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "How is the game Scored:");
-                        Bukkit.broadcastMessage("For winning: " + ChatColor.GOLD + (int)(plugin.getConfig().getInt("roundWinPoints") * multiplier) + ChatColor.RESET + " points per team (" + ChatColor.GOLD + (int)(plugin.getConfig().getInt("roundWinPoints") * multiplier/handler.getTeams().get(0).getSize()) + ChatColor.RESET + " points per player" +
-                                "\nFor a Kill, the killer gets: " + ChatColor.GOLD + (int)(plugin.getConfig().getInt("killPoints") * multiplier) + ChatColor.RESET + " points");
-                        Bukkit.broadcastMessage(ChatColor.STRIKETHROUGH + "----------------------------------------");
-                    }
+                    if(t.getSecondsLeft() == totalSeconds - 2) Bukkit.broadcastMessage(GameMessages.gameDescription());
+                    if(t.getSecondsLeft() == totalSeconds - 12) Bukkit.broadcastMessage(GameMessages.kitsDescription());
+                    if(t.getSecondsLeft() == totalSeconds - 22) Bukkit.broadcastMessage(GameMessages.pointsDescription((BattleBox) plugin));
 
                     if(t.getSecondsLeft() == 15 || t.getSecondsLeft() == 10 || t.getSecondsLeft() <= 5) {
                         for(Player p:Bukkit.getOnlinePlayers()) {

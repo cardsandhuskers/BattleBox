@@ -26,3 +26,9 @@ commands:
   setBattleboxArenaWall:
     description: sets the location of the bottom center block of the drop wall
     usage: /<command> [arena] [side]
+  cancelBattlebox:
+    description: cancels a game
+    usage: /<command>
+  reloadBattlebox:
+    description: reloads the game config
+    usage: /<command>

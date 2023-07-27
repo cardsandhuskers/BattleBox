@@ -71,6 +71,28 @@ public class RoundStartHandler {
             gameEndHandler.endGame();
         } else {
             matchups = bracket.getMatchups(handler.getTeams(), round);
+
+            //swap initial group so team 1 can play in both arenas
+            int numTeams = (totalRounds + 1);
+            int swapLoc = 0;
+
+            if(round % 4 == 0) {
+                swapLoc = numTeams / 2 - 1;
+            } else if(round % 2 == 0) {
+                swapLoc = numTeams / 4 - 1;
+            }
+            if(swapLoc > 0) {
+                Team swapTeamA = matchups[swapLoc][0];
+                Team swapTeamB = matchups[swapLoc][1];
+
+                matchups[swapLoc][0] = matchups[0][0];
+                matchups[swapLoc][1] = matchups[0][1];
+
+                matchups[0][0] = swapTeamA;
+                matchups[0][1] = swapTeamB;
+            }
+
+
             init();
         }
     }
