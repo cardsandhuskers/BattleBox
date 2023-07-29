@@ -27,13 +27,14 @@ import static io.github.cardsandhuskers.teams.Teams.handler;
 
 public class GameEndHandler {
     private BattleBox plugin;
+    private Countdown gameOverTimer;
 
     public GameEndHandler(BattleBox plugin) {
         this.plugin = plugin;
     }
 
     public void endGame() {
-        Countdown timer = new Countdown((JavaPlugin)plugin,
+        gameOverTimer = new Countdown((JavaPlugin)plugin,
                 plugin.getConfig().getInt("GameEndTime"),
                 //Timer Start
                 () -> {
@@ -74,7 +75,7 @@ public class GameEndHandler {
         );
 
         // Start scheduling, don't use the "run" method unless you want to skip a second
-        timer.scheduleTimer();
+        gameOverTimer.scheduleTimer();
     }
 
     public void saveRecords() throws IOException {
@@ -123,6 +124,10 @@ public class GameEndHandler {
             plugin.getLogger().severe("ERROR Calculating Stats!\n" + str);
         }
 
+    }
+
+    public void cancelTimers() {
+        if(gameOverTimer != null) gameOverTimer.cancelTimer();
     }
 
 }

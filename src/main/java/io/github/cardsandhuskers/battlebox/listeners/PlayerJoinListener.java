@@ -23,9 +23,7 @@ public class PlayerJoinListener implements Listener {
         p.teleport(plugin.getConfig().getLocation("WorldSpawn"));
         Inventory inv = p.getInventory();
         inv.clear();
-        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-            p.setGameMode(GameMode.SPECTATOR);
-        },20L);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> p.setGameMode(GameMode.SPECTATOR),10L);
     }
 
 

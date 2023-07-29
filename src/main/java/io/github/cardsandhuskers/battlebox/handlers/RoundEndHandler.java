@@ -2,6 +2,7 @@ package io.github.cardsandhuskers.battlebox.handlers;
 
 import io.github.cardsandhuskers.battlebox.commands.StartGameCommand;
 import io.github.cardsandhuskers.battlebox.objects.Countdown;
+import io.github.cardsandhuskers.battlebox.objects.GameMessages;
 import io.github.cardsandhuskers.teams.objects.Team;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
@@ -30,23 +31,7 @@ public class RoundEndHandler {
     public void endRound() {
 
         Team[][] matchups = roundStartHandler.getMatchups();
-        Bukkit.broadcastMessage("\nRound Summary: ");
-        for(int i = 0; i <matchups.length; i++) {
-            boolean gameFound = false;
-            for(Team t: winningTeamsList) {
-                if(matchups[i][0].equals(t)) {
-                    Bukkit.broadcastMessage(StringUtils.center(matchups[i][0].color + ChatColor.BOLD + matchups[i][0].getTeamName() + ChatColor.RESET + "  vs.  " + ChatColor.DARK_GRAY + matchups[i][1].getTeamName(), 45));
-                    gameFound = true;
-                } else if(matchups[i][1].equals(t)){
-                    Bukkit.broadcastMessage(StringUtils.center(ChatColor.DARK_GRAY + matchups[i][0].getTeamName() + ChatColor.RESET + "  vs.  " + matchups[i][1].color + ChatColor.BOLD + matchups[i][1].getTeamName(), 45));
-                    gameFound = true;
-                }
-            }
-            if(!gameFound) {
-                Bukkit.broadcastMessage(StringUtils.center(matchups[i][0].color + ChatColor.BOLD + matchups[i][0].getTeamName() + ChatColor.RESET + "  vs.  " + matchups[i][1].color + ChatColor.BOLD + matchups[i][1].getTeamName(), 45));
-            }
-        }
-        Bukkit.broadcastMessage("\n\n");
+        Bukkit.broadcastMessage(GameMessages.announceRoundResult(matchups));
 
         for(Team t: handler.getTeams()) {
             winningTeamsList.add(t);

@@ -109,6 +109,7 @@ public class StartGameCommand implements CommandExecutor {
                     roundsWon = new HashMap<>();
                     getServer().getPluginManager().registerEvents(new PregamePlayerAttackListener(), plugin);
                     getServer().getPluginManager().registerEvents(new PlayerJoinListener(plugin), plugin);
+                    getServer().getPluginManager().registerEvents(new PlayerDamageListener(), plugin);
 
                     //Bukkit.broadcastMessage(ChatColor.LIGHT_PURPLE + "Battlebox is Starting Soon. Get Ready!");
                     Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, ()-> {
@@ -138,7 +139,6 @@ public class StartGameCommand implements CommandExecutor {
                     HandlerList.unregisterAll(plugin);
                     //Register EventListeners
                     getServer().getPluginManager().registerEvents(new PlayerAttackListener(), plugin);
-
                     getServer().getPluginManager().registerEvents(new PlayerDamageListener(), plugin);
                     getServer().getPluginManager().registerEvents(new BlockBreakListener(roundStartHandler), plugin);
                     getServer().getPluginManager().registerEvents(new BlockPlaceListener(roundStartHandler, plugin), plugin);
@@ -160,6 +160,9 @@ public class StartGameCommand implements CommandExecutor {
                     if(scoreboard.getObjective("belowNameHP") != null) scoreboard.getObjective("belowNameHP").unregister();
                     Objective belowNameHP = scoreboard.registerNewObjective("belowNameHP", Criteria.HEALTH, ChatColor.DARK_RED + "❤");
                     belowNameHP.setDisplaySlot(DisplaySlot.BELOW_NAME);
+                    for(Player p:Bukkit.getOnlinePlayers()) {
+                        p.sendHealthUpdate();
+                    }
 
                 },
 

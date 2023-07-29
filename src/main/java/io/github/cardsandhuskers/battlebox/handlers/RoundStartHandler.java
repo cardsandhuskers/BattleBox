@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static io.github.cardsandhuskers.battlebox.BattleBox.*;
 
@@ -25,6 +26,7 @@ public class RoundStartHandler {
     private Countdown kitTimer;
     private Countdown pregameTimer;
     private Countdown inGameTimer;
+    private GameEndHandler gameEndHandler;
 
 
     private PlayerTeleportHandler teleporter;
@@ -54,6 +56,7 @@ public class RoundStartHandler {
         if(pregameTimer != null) pregameTimer.cancelTimer();
         if(inGameTimer != null) inGameTimer.cancelTimer();
         roundEndHandler.cancelTimers();
+        if(gameEndHandler != null) gameEndHandler.cancelTimers();
     }
 
     /**
@@ -67,7 +70,7 @@ public class RoundStartHandler {
             totalRounds = handler.getNumTeams() - 1;
         }
         if(round > totalRounds) {
-            GameEndHandler gameEndHandler = new GameEndHandler(plugin);
+            gameEndHandler = new GameEndHandler(plugin);
             gameEndHandler.endGame();
         } else {
             matchups = bracket.getMatchups(handler.getTeams(), round);
@@ -77,11 +80,16 @@ public class RoundStartHandler {
             int swapLoc = 0;
 
             if(round % 4 == 0) {
-                swapLoc = numTeams / 2 - 1;
+                if(numTeams >= 8) swapLoc = 3;
+                else if(numTeams >= 4) swapLoc = 1;
             } else if(round % 2 == 0) {
-                swapLoc = numTeams / 4 - 1;
+                if(numTeams >= 4) swapLoc = 1;
             }
             if(swapLoc > 0) {
+                System.out.println("SWAP: " + swapLoc);
+                System.out.println(Arrays.toString(matchups));
+
+
                 Team swapTeamA = matchups[swapLoc][0];
                 Team swapTeamB = matchups[swapLoc][1];
 
@@ -90,6 +98,8 @@ public class RoundStartHandler {
 
                 matchups[0][0] = swapTeamA;
                 matchups[0][1] = swapTeamB;
+
+                System.out.println(Arrays.toString(matchups));
             }
 
 
@@ -124,7 +134,7 @@ public class RoundStartHandler {
             }
 
             initKitTimer();
-            wallHandler.buildWalls();
+            wallHandler.buildWalls(false);
 
         } else {
             System.out.println("PLUGIN IS NULL");
@@ -263,7 +273,7 @@ public class RoundStartHandler {
                         for(Player p:t.getOnlinePlayers()) {
                             p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1f, 2f);
                             p.sendTitle(handler.getPlayerTeam(p).color + "GO!", "", 2, 12, 2);
-                            wallHandler.deleteWalls();
+                            wallHandler.buildWalls(true);
                         }
                     }
                 },

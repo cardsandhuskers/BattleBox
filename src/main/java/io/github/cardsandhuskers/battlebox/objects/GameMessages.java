@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import static io.github.cardsandhuskers.battlebox.BattleBox.multiplier;
+import static io.github.cardsandhuskers.battlebox.BattleBox.winningTeamsList;
 import static io.github.cardsandhuskers.teams.Teams.handler;
 
 public class GameMessages {
@@ -143,6 +144,26 @@ public class GameMessages {
         for(Player p: Bukkit.getOnlinePlayers()) {
             p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
         }
+    }
+
+    public static String announceRoundResult(Team[][] matchups) {
+        String msg = "\nRound Summary: \n";
+        for(int i = 0; i <matchups.length; i++) {
+            boolean gameFound = false;
+            for(Team t: winningTeamsList) {
+                if(matchups[i][0].equals(t)) {
+                    msg += StringUtils.center(matchups[i][0].color + ChatColor.BOLD + matchups[i][0].getTeamName() + ChatColor.RESET + "  vs.  " + ChatColor.DARK_GRAY + matchups[i][1].getTeamName(), 45) + "\n";
+                    gameFound = true;
+                } else if(matchups[i][1].equals(t)){
+                    msg += StringUtils.center(ChatColor.DARK_GRAY + matchups[i][0].getTeamName() + ChatColor.RESET + "  vs.  " + matchups[i][1].color + ChatColor.BOLD + matchups[i][1].getTeamName(), 45) + "\n";
+                    gameFound = true;
+                }
+            }
+            if(!gameFound) {
+                msg += StringUtils.center(ChatColor.DARK_GRAY + matchups[i][0].getTeamName() + ChatColor.RESET + "  vs.  " + ChatColor.DARK_GRAY + matchups[i][1].getTeamName(), 45) + "\n";
+            }
+        }
+        return msg;
     }
 
 }
