@@ -52,7 +52,6 @@ public class StatCalculator {
             throw new Exception(e);
         }
 
-        HashMap<Integer, ArrayList<CSVRecord>> recordsMap = new HashMap<>();
         for (CSVRecord r : recordList) {
             //skip header
             if (r.getRecordNumber() == 1) continue;
@@ -76,9 +75,6 @@ public class StatCalculator {
         playerStatsHolders = new ArrayList<>(playerStatsMap.values());
 
     }
-
-
-
 
     public ArrayList<PlayerStatsHolder> getStatsHolders(PlayerStatsComparator.SortType sortType) {
 

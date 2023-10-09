@@ -87,17 +87,18 @@ public class BlockPlaceListener implements Listener {
                             winningTeamsList.add(t);
                             for(Player p: t.getOnlinePlayers()) {
                                 int numPoints = plugin.getConfig().getInt("roundWinPoints")/t.getOnlinePlayers().size();
-                                handler.getPlayerTeam(p).addTempPoints(p, (numPoints * multiplier));
+                                t.addTempPoints(p, (numPoints * multiplier));
                                 p.sendMessage(t.color + "Your Team Won! " + ChatColor.RESET + "[+" + numPoints * multiplier + "] " + ChatColor.GREEN + "Points!");
-                                if(roundsWon.containsKey(handler.getPlayerTeam(p))) {
-                                    roundsWon.put(handler.getPlayerTeam(p), roundsWon.get(handler.getPlayerTeam(p)) + 1);
-                                } else {
-                                    roundsWon.put(handler.getPlayerTeam(p), 1);
-                                }
 
                                 p.sendTitle(ChatColor.GREEN + "Your Team Won!", "", 4, 40, 4);
                                 p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
                             }
+                            if(roundsWon.containsKey(t)) {
+                                roundsWon.put(t, roundsWon.get(t) + 1);
+                            } else {
+                                roundsWon.put(t, 1);
+                            }
+
                             Location loc = b.getLocation();
                             loc.setY(loc.getY()+1);
                             loc.setX(loc.getX() + .5);

@@ -80,7 +80,6 @@ public class GameEndHandler {
 
     public void saveRecords() throws IOException {
         for(Player p:killsMap.keySet()) if(p != null) System.out.println(p.getDisplayName() + ": " + killsMap.get(p));
-        System.out.println("~~~~~~~~~~~~~~~");
 
         FileWriter writer = new FileWriter(plugin.getDataFolder() + "/stats.csv", true);
         FileReader reader = new FileReader(plugin.getDataFolder() + "/stats.csv");

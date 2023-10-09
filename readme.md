@@ -34,20 +34,20 @@ Battlebox is a round robin PVP game where you face off against all other teams i
 
 ## Setup:
 1. The center of the arena should be a 3x3 of wool (doesn't technically have to be real center)
-2. Each kit room should contain 4 buttons on its wall, with 1 block of space between all of them
-3. The arenaWalls are the walls that disappear and let players into the arena when the round starts
+2. Each kit room should contain 4 buttons on its wall, with 1 block of space between each of them
+3. The arenaWalls are the walls that disappear and let players into the arena when the round starts, their size is (for now) hard-coded
 4. Arenas should be on a north-south alignment, (kit rooms should be on north and south ends)
 
 ## PlaceholerAPI hooks:
-%battlebox_timer% - returns current time remaining
-<br>%battlebox_timerstage% - returns the stage of the game
-<br>%battlebox_round% - returns the current round / total rounds
-<br>%battlebox_roundswon% - returns the number of rounds the player has won
+%Battlebox_timer% - returns current time remaining
+<br>%Battlebox_timerstage% - returns the stage of the game
+<br>%Battlebox_round% - returns the current round / total rounds
+<br>%Battlebox_roundswon% - returns the number of rounds the player has won
 
 ### Stat Leaderboard Hooks:
-%battlebox_playerKills_[index]% - returns the number of kills the person in that place has (single-game kills leaderboard)
-<br>%battlebox_totalKills_[index]% - returns the number of kills the person in that place has (lifetime kills leaderboard)
-<br>%battlebox_wins_[index]% - returns the number of wins the person in that place has (lifetime wins leaderboard)
+%Battlebox_playerKills_[index]% - returns the number of single game kills the person in that place has (single-game kills leaderboard)
+<br>%Battlebox_totalKills_[index]% - returns the number of total kills the person in that place has (lifetime kills leaderboard)
+<br>%Battlebox_wins_[index]% - returns the number of wins the person in that place has (lifetime wins leaderboard)
 
 ## Dependencies:
 - Teams Plugin (https://github.com/cardsandhuskers/TeamsPlugin)

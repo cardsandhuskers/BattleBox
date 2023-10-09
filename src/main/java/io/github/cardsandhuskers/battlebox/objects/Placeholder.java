@@ -111,7 +111,7 @@ public class Placeholder extends PlaceholderExpansion {
                 String color = "";
                 if (handler.getPlayerTeam(Bukkit.getPlayer(holder.name)) != null)
                     color = handler.getPlayerTeam(Bukkit.getPlayer(holder.name)).color;
-                return color + holder.name + ChatColor.RESET + ": " + holder.kills;
+                return color + holder.name + ChatColor.RESET + ": " + holder.wins;
             }
         } catch (Exception e) {
             StackTraceElement[] trace = e.getStackTrace();

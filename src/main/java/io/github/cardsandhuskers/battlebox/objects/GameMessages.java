@@ -27,7 +27,7 @@ public class GameMessages {
         String GAME_DESCRIPTION =
                 ChatColor.STRIKETHROUGH + "----------------------------------------\n" + ChatColor.RESET +
                 StringUtils.center(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "Battle Box", 30) +
-                ChatColor.BLUE + "" + ChatColor.BOLD + "\nHow To Play:" +
+                ChatColor.BLUE + "" + ChatColor.BOLD + "\nHow To Play:" + ChatColor.RESET +
                 "\nYou will be placed in an arena against the other teams in a round robin format." +
                 "\nYou must replace the wool in the center with your color wool to win the round." +
                 "\nKill your opponents, or don't, it's up to you! All that matters is that you complete the wool." +

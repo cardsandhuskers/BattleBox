@@ -172,7 +172,7 @@ public class StartGameCommand implements CommandExecutor {
                     if(t.getSecondsLeft() == totalSeconds - 12) Bukkit.broadcastMessage(GameMessages.kitsDescription());
                     if(t.getSecondsLeft() == totalSeconds - 22) Bukkit.broadcastMessage(GameMessages.pointsDescription((BattleBox) plugin));
 
-                    if(t.getSecondsLeft() == 15 || t.getSecondsLeft() == 10 || t.getSecondsLeft() <= 5) {
+                    if(t.getSecondsLeft() == 15 || t.getSecondsLeft() == 10 || t.getSecondsLeft() == 5) {
                         for(Player p:Bukkit.getOnlinePlayers()) {
                             p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
                         }

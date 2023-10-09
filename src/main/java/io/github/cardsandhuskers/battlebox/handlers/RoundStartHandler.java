@@ -316,7 +316,7 @@ public class RoundStartHandler {
                 //Each Second
                 (t) -> {
                     StartGameCommand.timeVar = t.getSecondsLeft();
-                    if(t.getSecondsLeft() <= 10) {
+                    if(t.getSecondsLeft() == 10 || t.getSecondsLeft() == 5) {
                         Bukkit.broadcastMessage(ChatColor.RED + "Round ends in " + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + t.getSecondsLeft() + ChatColor.RESET + ChatColor.RED + " Seconds!");
                     }
                 }

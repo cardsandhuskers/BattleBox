@@ -4,6 +4,10 @@ import io.github.cardsandhuskers.battlebox.BattleBox;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.data.type.Fence;
+import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
@@ -62,7 +66,14 @@ public class ArenaWallHandler {
                     Location temp = new Location(l.getWorld(), l.getX() + x, l.getY() + y, l.getZ());
                     Block b = temp.getBlock();
                     if (delete) b.setType(Material.AIR);
-                    else b.setType(Material.DARK_OAK_FENCE);
+                    else {
+                        b.setType(Material.DARK_OAK_FENCE);
+                        Fence fence = (Fence) b.getBlockData();
+                        fence.setFace(BlockFace.EAST, true);
+                        fence.setFace(BlockFace.WEST, true);
+                        b.setBlockData(fence);
+
+                    }
                 }
             }
         }
