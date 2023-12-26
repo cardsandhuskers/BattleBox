@@ -7,6 +7,8 @@ import io.github.cardsandhuskers.battlebox.listeners.*;
 import io.github.cardsandhuskers.battlebox.objects.Countdown;
 import io.github.cardsandhuskers.battlebox.objects.GameMessages;
 import io.github.cardsandhuskers.teams.objects.Team;
+import io.github.cardsandhuskers.battlebox.objects.Stats;
+
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.*;
 import org.bukkit.command.Command;
@@ -29,10 +31,13 @@ public class StartGameCommand implements CommandExecutor {
     RoundStartHandler roundStartHandler;
     private Countdown pregameTimer;
     public static int timeVar = 0;
-    //public static String timerStatus = "Game Starts in";
     ArenaWallHandler wallHandler;
+    Stats stats;
+
+
     public StartGameCommand(Plugin plugin) {
         this.plugin = plugin;
+        this.stats = new Stats("round,killer,killerTeam,prey,preyTeam,time");
     }
 
     @Override
@@ -46,7 +51,7 @@ public class StartGameCommand implements CommandExecutor {
                     player.sendMessage(ChatColor.RED + "ERROR: There are no Teams");
                 } else {
                     wallHandler = new ArenaWallHandler(plugin);
-                    roundStartHandler = new RoundStartHandler((BattleBox) plugin, wallHandler);
+                    roundStartHandler = new RoundStartHandler((BattleBox) plugin, wallHandler,stats);
 
                     startPregameCountdown();
 
@@ -74,7 +79,7 @@ public class StartGameCommand implements CommandExecutor {
                 }
             } else {
                 wallHandler = new ArenaWallHandler(plugin);
-                roundStartHandler = new RoundStartHandler((BattleBox) plugin, wallHandler);
+                roundStartHandler = new RoundStartHandler((BattleBox) plugin, wallHandler, stats);
                 startPregameCountdown();
 
                 try {
@@ -151,7 +156,7 @@ public class StartGameCommand implements CommandExecutor {
                     getServer().getPluginManager().registerEvents(new PlayerThrowListener(), plugin);
 
                     HashMap<Player, Location> playerLocationMap = new HashMap<>();
-                    getServer().getPluginManager().registerEvents(new PlayerDeathListener(plugin, playerLocationMap), plugin);
+                    getServer().getPluginManager().registerEvents(new PlayerDeathListener(plugin, playerLocationMap,stats), plugin);
                     getServer().getPluginManager().registerEvents(new PlayerRespawnListener(plugin, playerLocationMap), plugin);
 
 

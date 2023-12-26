@@ -1,6 +1,7 @@
 package io.github.cardsandhuskers.battlebox.handlers;
 
 import io.github.cardsandhuskers.battlebox.BattleBox;
+import io.github.cardsandhuskers.battlebox.BattleBox.GameState;
 import io.github.cardsandhuskers.battlebox.commands.StartGameCommand;
 import io.github.cardsandhuskers.battlebox.objects.Countdown;
 import io.github.cardsandhuskers.battlebox.objects.GameMessages;
@@ -24,22 +25,35 @@ import java.util.Comparator;
 
 import static io.github.cardsandhuskers.battlebox.BattleBox.*;
 import static io.github.cardsandhuskers.teams.Teams.handler;
+import io.github.cardsandhuskers.battlebox.objects.Stats;
 
 public class GameEndHandler {
     private BattleBox plugin;
     private Countdown gameOverTimer;
+    private Stats stats;
 
-    public GameEndHandler(BattleBox plugin) {
+    public GameEndHandler(BattleBox plugin, Stats stats) {
         this.plugin = plugin;
+        this.stats = stats;
     }
 
     public void endGame() {
         gameOverTimer = new Countdown((JavaPlugin)plugin,
-                plugin.getConfig().getInt("GameEndTime"),
+            plugin.getConfig().getInt("GameEndTime"),
                 //Timer Start
                 () -> {
                     gameState = GameState.GAME_OVER;
                     Bukkit.getScoreboardManager().getMainScoreboard().getObjective("belowNameHP").unregister();
+
+                    int eventNum = -1;
+                    try {
+                        eventNum = Bukkit.getPluginManager().getPlugin("LobbyPlugin")
+                            .getConfig().getInt("eventNum");
+                    }   catch (Exception e) 
+                        {eventNum = 1;}
+
+                    String fileName = "battleBoxStats" + Integer.toString(eventNum);
+                    stats.writeToFile(plugin.getDataFolder().toPath().toString(), fileName);
                 },
 
                 //Timer End

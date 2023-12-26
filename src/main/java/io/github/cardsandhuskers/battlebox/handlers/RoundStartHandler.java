@@ -6,6 +6,8 @@ import io.github.cardsandhuskers.battlebox.objects.Bracket;
 import io.github.cardsandhuskers.battlebox.objects.Countdown;
 import io.github.cardsandhuskers.battlebox.objects.TeamKits;
 import io.github.cardsandhuskers.teams.objects.Team;
+import io.github.cardsandhuskers.battlebox.objects.Stats;
+
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -27,7 +29,7 @@ public class RoundStartHandler {
     private Countdown pregameTimer;
     private Countdown inGameTimer;
     private GameEndHandler gameEndHandler;
-
+    private Stats stats;
 
     private PlayerTeleportHandler teleporter;
     private ArrayList<TeamKits> teamKitsList;
@@ -37,7 +39,7 @@ public class RoundStartHandler {
 
 
 
-    public RoundStartHandler(BattleBox plugin, ArenaWallHandler wallHandler) {
+    public RoundStartHandler(BattleBox plugin, ArenaWallHandler wallHandler, Stats stats) {
 
         this.plugin = plugin;
         this.wallHandler = wallHandler;
@@ -48,6 +50,7 @@ public class RoundStartHandler {
         //matchups = bracket.getMatchups(handler.getTeams(), round);
         teleporter = new PlayerTeleportHandler(plugin, matchups);
         teamKitsList = new ArrayList<>();
+        this.stats = stats;
     }
 
 
@@ -70,7 +73,7 @@ public class RoundStartHandler {
             totalRounds = handler.getNumTeams() - 1;
         }
         if(round > totalRounds) {
-            gameEndHandler = new GameEndHandler(plugin);
+            gameEndHandler = new GameEndHandler(plugin, stats);
             gameEndHandler.endGame();
         } else {
             matchups = bracket.getMatchups(handler.getTeams(), round);
