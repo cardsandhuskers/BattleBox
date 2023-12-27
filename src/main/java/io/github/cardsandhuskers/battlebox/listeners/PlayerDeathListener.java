@@ -26,12 +26,12 @@ import static io.github.cardsandhuskers.battlebox.BattleBox.*;
 public class PlayerDeathListener implements Listener {
     HashMap<Player, Location> playerLocationMap;
     Plugin plugin;
-    private Stats stats;
+    private Stats killStats;
 
-    public PlayerDeathListener(Plugin plugin, HashMap playerLocationMap, Stats stats) {
+    public PlayerDeathListener(Plugin plugin, HashMap playerLocationMap, Stats killStats) {
         this.playerLocationMap = playerLocationMap;
         this.plugin = plugin;
-        this.stats = stats;
+        this.killStats = killStats;
     }
 
     /**
@@ -78,7 +78,7 @@ public class PlayerDeathListener implements Listener {
 
                 //round,killer,killerTeam,prey,preyTeam,time
                 String lineEntry = BattleBox.round + "," + attacker.getName() + "," + attackerTeam.getTeamName() + "," + attacked.getName() + "," + attackedTeam.getTeamName() + "," + StartGameCommand.timeVar;
-                stats.addEntry(lineEntry);
+                killStats.addEntry(lineEntry);
             }
         //If Player dies another way(probably lava)
         } else {
@@ -114,7 +114,7 @@ public class PlayerDeathListener implements Listener {
 
                     //round,killer,killerTeam,prey,preyTeam,time
                     String lineEntry = BattleBox.round + "," + attacker.getName() + "," + attackerTeam.getTeamName() + "," + attacked.getName() + "," + attackedTeam.getTeamName() + "," + StartGameCommand.timeVar;
-                    stats.addEntry(lineEntry);
+                    killStats.addEntry(lineEntry);
                 }
             }
             if(!isAttacked) {
@@ -126,7 +126,7 @@ public class PlayerDeathListener implements Listener {
                 
                 //round,killer,killerTeam,prey,preyTeam,time
                 String lineEntry = BattleBox.round + ",NA,NA," + attacked.getName() + "," + attackedTeam.getTeamName() + "," + StartGameCommand.timeVar;
-                stats.addEntry(lineEntry);
+                killStats.addEntry(lineEntry);
             }
         }
     }

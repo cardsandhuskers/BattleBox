@@ -1,6 +1,7 @@
 package io.github.cardsandhuskers.battlebox.handlers;
 
 import io.github.cardsandhuskers.battlebox.BattleBox;
+import io.github.cardsandhuskers.battlebox.BattleBox.GameState;
 import io.github.cardsandhuskers.battlebox.commands.StartGameCommand;
 import io.github.cardsandhuskers.battlebox.objects.Bracket;
 import io.github.cardsandhuskers.battlebox.objects.Countdown;
@@ -29,7 +30,8 @@ public class RoundStartHandler {
     private Countdown pregameTimer;
     private Countdown inGameTimer;
     private GameEndHandler gameEndHandler;
-    private Stats stats;
+    private Stats killStats;
+    private Stats winStats;
 
     private PlayerTeleportHandler teleporter;
     private ArrayList<TeamKits> teamKitsList;
@@ -39,18 +41,22 @@ public class RoundStartHandler {
 
 
 
-    public RoundStartHandler(BattleBox plugin, ArenaWallHandler wallHandler, Stats stats) {
+    public RoundStartHandler(BattleBox plugin, ArenaWallHandler wallHandler, Stats killStats) {
 
         this.plugin = plugin;
         this.wallHandler = wallHandler;
         blockList = new ArrayList<>();
         centerBlockList = new ArrayList<>();
-        bracket = new Bracket();
-        roundEndHandler = new RoundEndHandler(plugin, this);
-        //matchups = bracket.getMatchups(handler.getTeams(), round);
-        teleporter = new PlayerTeleportHandler(plugin, matchups);
         teamKitsList = new ArrayList<>();
-        this.stats = stats;
+        bracket = new Bracket();
+
+        this.winStats = new Stats("Round,winningPlayer,winningTeam,losingTeam");
+        this.killStats = killStats;
+        
+        
+        roundEndHandler = new RoundEndHandler(plugin, this,matchups,winStats);
+        teleporter = new PlayerTeleportHandler(plugin, matchups);
+
     }
 
 
@@ -73,7 +79,7 @@ public class RoundStartHandler {
             totalRounds = handler.getNumTeams() - 1;
         }
         if(round > totalRounds) {
-            gameEndHandler = new GameEndHandler(plugin, stats);
+            gameEndHandler = new GameEndHandler(plugin, killStats,winStats);
             gameEndHandler.endGame();
         } else {
             matchups = bracket.getMatchups(handler.getTeams(), round);

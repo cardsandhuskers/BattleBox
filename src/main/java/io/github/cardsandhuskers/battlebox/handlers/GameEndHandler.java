@@ -30,11 +30,13 @@ import io.github.cardsandhuskers.battlebox.objects.Stats;
 public class GameEndHandler {
     private BattleBox plugin;
     private Countdown gameOverTimer;
-    private Stats stats;
+    private Stats killStats;
+    private Stats winStats;
 
-    public GameEndHandler(BattleBox plugin, Stats stats) {
+    public GameEndHandler(BattleBox plugin, Stats killStats, Stats winStats) {
         this.plugin = plugin;
-        this.stats = stats;
+        this.killStats = killStats;
+        this.winStats = winStats;
     }
 
     public void endGame() {
@@ -52,8 +54,12 @@ public class GameEndHandler {
                     }   catch (Exception e) 
                         {eventNum = 1;}
 
-                    String fileName = "battleBoxStats" + Integer.toString(eventNum);
-                    stats.writeToFile(plugin.getDataFolder().toPath().toString(), fileName);
+                    String fileName = "battleBoxKillStats" + Integer.toString(eventNum);
+                    killStats.writeToFile(plugin.getDataFolder().toPath().toString(), fileName);
+
+                    fileName = "battleBoxWinStats" + Integer.toString(eventNum);
+                    winStats.writeToFile(plugin.getDataFolder().toPath().toString(), fileName);
+
                 },
 
                 //Timer End

@@ -1,17 +1,23 @@
 package io.github.cardsandhuskers.battlebox.handlers;
 
+import io.github.cardsandhuskers.battlebox.BattleBox;
+import io.github.cardsandhuskers.battlebox.BattleBox.GameState;
 import io.github.cardsandhuskers.battlebox.commands.StartGameCommand;
 import io.github.cardsandhuskers.battlebox.objects.Countdown;
 import io.github.cardsandhuskers.battlebox.objects.GameMessages;
 import io.github.cardsandhuskers.teams.objects.Team;
+import io.github.cardsandhuskers.battlebox.objects.Stats;
+
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import static io.github.cardsandhuskers.battlebox.BattleBox.*;
@@ -20,23 +26,28 @@ public class RoundEndHandler {
     private Plugin plugin;
     private RoundStartHandler roundStartHandler;
     private Countdown roundOverTimer;
-    public RoundEndHandler(Plugin plugin, RoundStartHandler roundStartHandler) {
+    private Stats winStats;
+    private Team[][] matchups;
+
+    public RoundEndHandler(Plugin plugin, RoundStartHandler roundStartHandler, Team[][] matchups, Stats winStats) {
         this.plugin = plugin;
         this.roundStartHandler = roundStartHandler;
+        this.winStats = winStats;
+        this.matchups = matchups;
     }
 
     public void cancelTimers() {
         if(roundOverTimer != null) roundOverTimer.cancelTimer();
     }
     public void endRound() {
-
-        Team[][] matchups = roundStartHandler.getMatchups();
+        this.matchups = roundStartHandler.getMatchups();
         Bukkit.broadcastMessage(GameMessages.announceRoundResult(matchups));
 
         for(Team t: handler.getTeams()) {
             winningTeamsList.add(t);
         }
 
+        updateWinStats();
 
         roundOverTimer();
     }
@@ -50,6 +61,7 @@ public class RoundEndHandler {
                 //Timer Start
                 () -> {
                     gameState = GameState.ROUND_OVER;
+                    
                 },
 
                 //Timer End
@@ -79,5 +91,34 @@ public class RoundEndHandler {
 
         // Start scheduling, don't use the "run" method unless you want to skip a second
         roundOverTimer.scheduleTimer();
+    }
+
+    /**
+     * Adds the teams that won to the winStats object,
+     * which is used to store the teams/players that won
+     * each round. This function should be called before
+     * stats have been cleared for the start of a new round.
+     * 
+     * @author J. Scotty Solomon
+     */
+    private void updateWinStats() {
+        //Round,winningPlayer,winningTeam,losingTeam
+
+        for(Team team: winningTeamsList) {
+            Team loserTeam = null;
+
+            for (Team[] matchup : matchups) {
+                if (matchup[0].equals(team)) loserTeam = matchup[1];
+                if (matchup[1].equals(team)) loserTeam = matchup[0];
+            }
+
+            ArrayList<Player> players = team.getOnlinePlayers();
+
+            for(Player player: players) {
+                String lineEntry = BattleBox.round + "," + player.getName() + "," + team.getTeamName() + "," + loserTeam.getTeamName();
+                winStats.addEntry(lineEntry);
+            }
+        }
+        
     }
 }

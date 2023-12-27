@@ -32,12 +32,12 @@ public class StartGameCommand implements CommandExecutor {
     private Countdown pregameTimer;
     public static int timeVar = 0;
     ArenaWallHandler wallHandler;
-    Stats stats;
+    Stats killStats;
 
 
     public StartGameCommand(Plugin plugin) {
         this.plugin = plugin;
-        this.stats = new Stats("round,killer,killerTeam,prey,preyTeam,time");
+        this.killStats = new Stats("round,killer,killerTeam,prey,preyTeam,time");
     }
 
     @Override
@@ -51,7 +51,7 @@ public class StartGameCommand implements CommandExecutor {
                     player.sendMessage(ChatColor.RED + "ERROR: There are no Teams");
                 } else {
                     wallHandler = new ArenaWallHandler(plugin);
-                    roundStartHandler = new RoundStartHandler((BattleBox) plugin, wallHandler,stats);
+                    roundStartHandler = new RoundStartHandler((BattleBox) plugin, wallHandler,killStats);
 
                     startPregameCountdown();
 
@@ -79,7 +79,7 @@ public class StartGameCommand implements CommandExecutor {
                 }
             } else {
                 wallHandler = new ArenaWallHandler(plugin);
-                roundStartHandler = new RoundStartHandler((BattleBox) plugin, wallHandler, stats);
+                roundStartHandler = new RoundStartHandler((BattleBox) plugin, wallHandler, killStats);
                 startPregameCountdown();
 
                 try {
@@ -156,7 +156,7 @@ public class StartGameCommand implements CommandExecutor {
                     getServer().getPluginManager().registerEvents(new PlayerThrowListener(), plugin);
 
                     HashMap<Player, Location> playerLocationMap = new HashMap<>();
-                    getServer().getPluginManager().registerEvents(new PlayerDeathListener(plugin, playerLocationMap,stats), plugin);
+                    getServer().getPluginManager().registerEvents(new PlayerDeathListener(plugin, playerLocationMap,killStats), plugin);
                     getServer().getPluginManager().registerEvents(new PlayerRespawnListener(plugin, playerLocationMap), plugin);
 
 
