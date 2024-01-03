@@ -50,7 +50,7 @@ public class PlayerDeathListener implements Listener {
         if(cause.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
             if(e.getEntity().getKiller().getType() == EntityType.PLAYER) {
                 Player attacker = e.getEntity().getKiller();
-                int numPoints = plugin.getConfig().getInt("killPoints");
+                double numPoints = plugin.getConfig().getInt("killPoints");
                 addKill(attacker);
 
                 Team attackerTeam = handler.getPlayerTeam(attacker);
@@ -89,7 +89,7 @@ public class PlayerDeathListener implements Listener {
                 if(s.getAttacked().equals(attacked)) {
                     isAttacked = true;
                     Player attacker = s.getAttacker();
-                    int numPoints = plugin.getConfig().getInt("killPoints");
+                    double numPoints = plugin.getConfig().getInt("killPoints");
                     addKill(attacker);
 
                     Team attackerTeam = handler.getPlayerTeam(attacker);

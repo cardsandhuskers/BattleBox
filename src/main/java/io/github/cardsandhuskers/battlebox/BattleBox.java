@@ -53,8 +53,6 @@ public final class BattleBox extends JavaPlugin {
 
         handler = Teams.handler;
 
-
-
         getConfig().options().copyDefaults();
         saveDefaultConfig();
 

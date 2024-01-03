@@ -1,11 +1,11 @@
 package io.github.cardsandhuskers.battlebox.objects;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Simple Class that creates a String to be written
@@ -112,22 +112,5 @@ public class Stats {
 
     public String toString() {
         return getCSV();
-    }
-
-    public static void main(String[] args) {
-        Stats stat = new Stats("One,Two,Three");
-
-        stat.addEntry("1,test,test");
-        stat.addEntry("2,test,test");
-        stat.addEntry("3,test,test");
-        stat.addEntry("4,test,test");
-        stat.addEntry("5,test,test");
-        stat.addEntry("6,test,test");
-
-        System.out.println(stat.getCSV());
-
-        System.out.println("Writing to file");
-
-        stat.writeToFile(".","test");
     }
 }

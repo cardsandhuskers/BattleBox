@@ -42,7 +42,7 @@ public class GameMessages {
                 "\nThe " + ChatColor.LIGHT_PURPLE + "marksman" + ChatColor.RESET + " kit adds a multishot 3 crossbow to your arsenal! A great way to provide covering fire." +
                 "\nThe " + ChatColor.DARK_AQUA + "potion master" + ChatColor.RESET + " kit gives you 2 harming, 2 healing, and 1 lingering harming potion! Use them wisely." +
                 "\nThe " + ChatColor.BLUE + "swordsman" + ChatColor.RESET + " kit gives you an iron sword! You can do big damage with your sword." +
-                "\nThe " + ChatColor.RED + "armorer" + ChatColor.RESET + " kit adds protection 3 leather chestplate and leggings, with knockback resistance! Use it to tank damage." +
+                "\nThe " + ChatColor.RED + "armorer" + ChatColor.RESET + " kit adds protection 3 leather chestplate and leggings, with knockback resistance! Use it to tank damage.\n" +
                 ChatColor.STRIKETHROUGH + "----------------------------------------";
         return KITS_DESCRIPTION;
     }
@@ -58,7 +58,7 @@ public class GameMessages {
                 ChatColor.GOLD + "" + ChatColor.BOLD + "\nHow is the game Scored:" +
                 "\nFor winning: " + ChatColor.GOLD + (int)(plugin.getConfig().getInt("roundWinPoints") * multiplier) + ChatColor.RESET + " points per team (" +
                         ChatColor.GOLD + (int)(plugin.getConfig().getInt("roundWinPoints") * multiplier/ BattleBox.handler.getTeams().get(0).getSize()) + ChatColor.RESET + " points per player" +
-                "\nFor a Kill, the killer gets: " + ChatColor.GOLD + (int)(plugin.getConfig().getInt("killPoints") * multiplier) + ChatColor.RESET + " points" +
+                "\nFor a Kill, the killer gets: " + ChatColor.GOLD + (int)(plugin.getConfig().getInt("killPoints") * multiplier) + ChatColor.RESET + " points\n" +
                 ChatColor.STRIKETHROUGH + "----------------------------------------";
         return POINTS_DESCRIPTION;
     }

@@ -5,6 +5,7 @@ import io.github.cardsandhuskers.battlebox.BattleBox.GameState;
 import io.github.cardsandhuskers.battlebox.commands.StartGameCommand;
 import io.github.cardsandhuskers.battlebox.objects.Countdown;
 import io.github.cardsandhuskers.battlebox.objects.GameMessages;
+import io.github.cardsandhuskers.teams.handlers.TeamHandler;
 import io.github.cardsandhuskers.teams.objects.Team;
 import io.github.cardsandhuskers.teams.objects.TempPointsHolder;
 import org.apache.commons.csv.CSVFormat;
@@ -64,14 +65,14 @@ public class GameEndHandler {
 
                 //Timer End
                 () -> {
-                    try {
-                        saveRecords();
+                    /*try {
+                        //saveRecords();
                     } catch (IOException e) {
                         StackTraceElement[] trace = e.getStackTrace();
                         String str = "";
                         for(StackTraceElement element:trace) str += element.toString() + "\n";
                         plugin.getLogger().severe("ERROR Calculating Stats!\n" + str);
-                    }
+                    }*/
 
                     //tp everyone to lobby
                     Location location = plugin.getConfig().getLocation("Lobby");
@@ -98,8 +99,7 @@ public class GameEndHandler {
         gameOverTimer.scheduleTimer();
     }
 
-    public void saveRecords() throws IOException {
-        for(Player p:killsMap.keySet()) if(p != null) System.out.println(p.getDisplayName() + ": " + killsMap.get(p));
+    /*public void saveRecords() throws IOException {
 
         FileWriter writer = new FileWriter(plugin.getDataFolder() + "/stats.csv", true);
         FileReader reader = new FileReader(plugin.getDataFolder() + "/stats.csv");
@@ -123,12 +123,11 @@ public class GameEndHandler {
         //printer.printRecord(currentGame);
         for(Player p:killsMap.keySet()) {
             if(p == null) continue;
-            if(handler.getPlayerTeam(p) == null) continue;
+            if(TeamHandler.getInstance().getPlayerTeam(p) == null) continue;
 
-            Team t = handler.getPlayerTeam(p);
+            Team t = TeamHandler.getInstance().getPlayerTeam(p);
             int rounds;
-            if(roundsWon.containsKey(t)) rounds = roundsWon.get(t);
-            else rounds = 0;
+            rounds = roundsWon.getOrDefault(t, 0);
 
             printer.printRecord(eventNum, t.getTeamName(), p.getDisplayName(), killsMap.get(p), rounds);
         }
@@ -143,7 +142,7 @@ public class GameEndHandler {
             plugin.getLogger().severe("ERROR Calculating Stats!\n" + str);
         }
 
-    }
+    }*/
 
     public void cancelTimers() {
         if(gameOverTimer != null) gameOverTimer.cancelTimer();

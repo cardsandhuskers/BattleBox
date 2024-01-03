@@ -95,9 +95,6 @@ public class StatCalculator {
         return sgkh;
     }
 
-
-
-
     public class PlayerStatsHolder {
         int kills = 0;
         int wins = 0;
