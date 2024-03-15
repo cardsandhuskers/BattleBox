@@ -95,9 +95,6 @@ public class RoundStartHandler {
                 if(numTeams >= 4) swapLoc = 1;
             }
             if(swapLoc > 0) {
-                System.out.println("SWAP: " + swapLoc);
-                System.out.println(Arrays.toString(matchups));
-
 
                 Team swapTeamA = matchups[swapLoc][0];
                 Team swapTeamB = matchups[swapLoc][1];
@@ -108,7 +105,6 @@ public class RoundStartHandler {
                 matchups[0][0] = swapTeamA;
                 matchups[0][1] = swapTeamB;
 
-                System.out.println(Arrays.toString(matchups));
             }
 
 

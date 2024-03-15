@@ -11,6 +11,7 @@ import io.github.cardsandhuskers.battlebox.objects.Stats;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -42,12 +43,11 @@ public class RoundEndHandler {
     public void endRound() {
         this.matchups = roundStartHandler.getMatchups();
         Bukkit.broadcastMessage(GameMessages.announceRoundResult(matchups));
+        updateWinStats();
 
         for(Team t: handler.getTeams()) {
             winningTeamsList.add(t);
         }
-
-        updateWinStats();
 
         roundOverTimer();
     }
@@ -119,6 +119,5 @@ public class RoundEndHandler {
                 winStats.addEntry(lineEntry);
             }
         }
-        
     }
 }
