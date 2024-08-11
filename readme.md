@@ -48,6 +48,8 @@ Battlebox is a round robin PVP game where you face off against all other teams i
 %Battlebox_playerKills_[index]% - returns the number of single game kills the person in that place has (single-game kills leaderboard)
 <br>%Battlebox_totalKills_[index]% - returns the number of total kills the person in that place has (lifetime kills leaderboard)
 <br>%Battlebox_wins_[index]% - returns the number of wins the person in that place has (lifetime wins leaderboard)
+<br>%Battlebox_yourwins% - returns your placement and win count
+<br>%Battlebox_yourkills% - returns your placement and kill count
 
 ## Dependencies:
 - Teams Plugin (https://github.com/cardsandhuskers/TeamsPlugin)

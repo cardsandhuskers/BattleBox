@@ -1,6 +1,8 @@
 package io.github.cardsandhuskers.battlebox.objects;
 
 import io.github.cardsandhuskers.battlebox.BattleBox;
+import io.github.cardsandhuskers.teams.handlers.TeamHandler;
+import io.github.cardsandhuskers.teams.objects.Team;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -113,6 +115,51 @@ public class Placeholder extends PlaceholderExpansion {
                     color = handler.getPlayerTeam(Bukkit.getPlayer(holder.name)).color;
                 return color + holder.name + ChatColor.RESET + ": " + holder.wins;
             }
+            if(values[0].equalsIgnoreCase("yourKills")) {
+                ArrayList<StatCalculator.PlayerStatsHolder> killsHolders = plugin.statCalculator.getStatsHolders(StatCalculator.PlayerStatsComparator.SortType.KILLS);
+
+                int i = 1;
+                StatCalculator.PlayerStatsHolder playerHolder = null;
+                for(StatCalculator.PlayerStatsHolder holder: killsHolders) {
+                    if(holder.name.equals(p.getName())) {
+                        playerHolder = holder;
+                        break;
+                    }
+                    i++;
+                }
+                if(playerHolder == null || i <= 10) return "";
+
+                Team team = TeamHandler.getInstance().getPlayerTeam(p.getPlayer());
+                String color = "";
+                if(team != null) color = team.getColor();
+
+                return i + ". " + color + "You" + ChatColor.RESET + ": " + playerHolder.kills;
+
+            }
+            if(values[0].equalsIgnoreCase("yourWins")) {
+                ArrayList<StatCalculator.PlayerStatsHolder> killsHolders = plugin.statCalculator.getStatsHolders(StatCalculator.PlayerStatsComparator.SortType.WINS);
+
+                int i = 1;
+                StatCalculator.PlayerStatsHolder playerHolder = null;
+                for(StatCalculator.PlayerStatsHolder holder: killsHolders) {
+                    if(holder.name.equals(p.getName())) {
+                        playerHolder = holder;
+                        break;
+                    }
+                    i++;
+                }
+                if(playerHolder == null || i <= 10) return "";
+
+                Team team = TeamHandler.getInstance().getPlayerTeam(p.getPlayer());
+                String color = "";
+                if(team != null) color = team.getColor();
+
+                return i + ". " + color + "You" + ChatColor.RESET + ": " + playerHolder.wins;
+
+            }
+
+
+
         } catch (Exception e) {
             StackTraceElement[] trace = e.getStackTrace();
             String str = "";
