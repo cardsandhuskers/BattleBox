@@ -16,6 +16,7 @@ public class StatCalculator {
     private int currentEvent;
 
     private HashMap<String, PlayerStatsHolder> playerStatsMap;
+    ArrayList<SingleGameHolder> singleGameHolders = new ArrayList<>();
 
     public StatCalculator(BattleBox plugin) {
         this.plugin = plugin;
@@ -30,7 +31,6 @@ public class StatCalculator {
         FileReader reader = null;
 
         for(int event = 1; event <= currentEvent; event++) {
-
             //wins
             try {
                 reader = new FileReader(plugin.getDataFolder() + "/battleBoxWinStats" + event + ".csv");
@@ -46,13 +46,12 @@ public class StatCalculator {
             CSVFormat format = builder.build();
 
             CSVParser parser = new CSVParser(reader, format);
-
             List<CSVRecord> recordList = parser.getRecords();
             reader.close();
 
-            System.out.println("WINS ___-----");
-
+            System.out.println("EVENT " + event + "\n ----------WINS----------");
             for(CSVRecord r:recordList) {
+                System.out.println(r);
                 if (r.getRecordNumber() == 1) continue;
 
                 String winner = r.get(1);
@@ -61,11 +60,7 @@ public class StatCalculator {
                     holder = new PlayerStatsHolder(winner);
                     playerStatsMap.put(winner, holder);
                 }
-                System.out.println(r);
-
                 holder.addWin(event);
-
-
             }
 
             //kills
@@ -86,9 +81,9 @@ public class StatCalculator {
             recordList = parser.getRecords();
             reader.close();
 
-            System.out.println("KILLS ___-----");
-
+            System.out.println("-----KILLS-----");
             for(CSVRecord r:recordList) {
+                System.out.println(r);
                 if (r.getRecordNumber() == 1) continue;
 
                 String killer = r.get(1);
@@ -97,18 +92,12 @@ public class StatCalculator {
                     holder = new PlayerStatsHolder(killer);
                     playerStatsMap.put(killer, holder);
                 }
-
                 holder.addKill(event);
 
-                System.out.println(r);
-
-
             }
-
-            System.out.println(playerStatsMap.keySet());
-
         }
-            /*
+
+        //old file
         try {
             reader = new FileReader(plugin.getDataFolder() + "/stats.csv");
         } catch (IOException e) {
@@ -139,34 +128,60 @@ public class StatCalculator {
             //skip header
             if (r.getRecordNumber() == 1) continue;
             String name = r.get(2);
-            if(playerStatsMap.containsKey(name)) {
-                PlayerStatsHolder h = playerStatsMap.get(name);
-                h.kills += Integer.parseInt(r.get(3));
-                h.wins += Integer.parseInt(r.get(4));
-            } else {
-                PlayerStatsHolder h = new PlayerStatsHolder(name);
-                h.kills += Integer.parseInt(r.get(3));
-                h.wins += Integer.parseInt(r.get(4));
-                playerStatsMap.put(name, h);
+
+            PlayerStatsHolder h = playerStatsMap.get(name);
+            if(h == null) {
+                h = new PlayerStatsHolder(name);
             }
-            SingleGameKillsHolder kh = new SingleGameKillsHolder();
-            kh.name = name;
-            kh.kills = Integer.parseInt(r.get(3));
-            kh.eventNum = Integer.parseInt(r.get(0));
-            sgKillsHolders.add(kh);
+
+            int kills = Integer.parseInt(r.get(3));
+            int event = Integer.parseInt(r.get(0));
+            int wins = Integer.parseInt(r.get(4));
+
+            h.addKills(event, kills);
+            h.addWins(event, wins);
         }
-        playerStatsHolders = new ArrayList<>(playerStatsMap.values());
-*/
+
+        createSingleHolders();
     }
 
     public ArrayList<PlayerStatsHolder> getStatsHolders(PlayerStatsComparator.SortType sortType) {
-
         ArrayList<PlayerStatsHolder> psh= new ArrayList<>(playerStatsMap.values());
 
-        Comparator PlayerStatsCompare = new PlayerStatsComparator(sortType);
-        psh.sort(PlayerStatsCompare);
+        Comparator playerStatsCompare = new PlayerStatsComparator(sortType);
+        psh.sort(playerStatsCompare);
         Collections.reverse(psh);
-        return new ArrayList<>(psh);
+        return psh;
+    }
+
+    public ArrayList<SingleGameHolder> getSingleGameHolders(PlayerStatsComparator.SortType sortType) {
+        ArrayList<SingleGameHolder> sgh = new ArrayList<>(singleGameHolders);
+
+        Comparator singleGameStatsCompare = new SingleGameStatsComparator(sortType);
+        sgh.sort(singleGameStatsCompare);
+        Collections.reverse(sgh);
+        return sgh;
+    }
+
+
+    public ArrayList<SingleGameHolder> createSingleHolders() {
+        for (PlayerStatsHolder psh: playerStatsMap.values()) {
+            for(int event = 1; event <= currentEvent; event++) {
+                if(psh.wins.get(event) == null && psh.kills.get(event) == null) {
+                    continue;
+                }
+
+                int wins = psh.wins.getOrDefault(event, 0);
+                int kills = psh.kills.getOrDefault(event, 0);
+
+                SingleGameHolder sgh = new SingleGameHolder(psh.name, event, kills, wins);
+                singleGameHolders.add(sgh);
+            }
+
+
+        }
+
+        return singleGameHolders;
     }
 
     public class PlayerStatsHolder {
@@ -188,6 +203,16 @@ public class StatCalculator {
             kills.put(event, currKills + 1);
         }
 
+        public void addKills(int event, int eKills) {
+            int currKills = kills.getOrDefault(event, 0);
+            kills.put(event, currKills + eKills);
+        }
+
+        public void addWins(int event, int eWins) {
+            int currWins = wins.getOrDefault(event, 0);
+            wins.put(event, currWins + eWins);
+        }
+
         public int getTotalWins() {
             int totalWins = 0;
             for(Integer i: wins.values()) totalWins += i;
@@ -201,9 +226,25 @@ public class StatCalculator {
 
             return totalKills;
         }
+    }
 
+    public class SingleGameHolder {
+        public final String name;
+        public final int event, kills, wins;
 
-
+        /**
+         *
+         * @param name
+         * @param event
+         * @param kills
+         * @param wins
+         */
+        public SingleGameHolder(String name, int event, int kills, int wins) {
+            this.name = name;
+            this.event = event;
+            this.kills = kills;
+            this.wins = wins;
+        }
     }
 
     public class PlayerStatsComparator implements Comparator<PlayerStatsHolder> {
@@ -228,6 +269,28 @@ public class StatCalculator {
         public enum SortType {
             KILLS,
             WINS
+        }
+    }
+
+    public class SingleGameStatsComparator implements Comparator<SingleGameHolder> {
+        public PlayerStatsComparator.SortType sortType;
+
+        public SingleGameStatsComparator(PlayerStatsComparator.SortType sortType) {
+            this.sortType = sortType;
+        }
+
+        public int compare(SingleGameHolder h1, SingleGameHolder h2) {
+            if(sortType == sortType.KILLS) {
+                int compare = Integer.compare(h1.kills, h2.kills);
+                if(compare == 0) h1.name.compareTo(h2.name);
+                if(compare == 0) compare = 1;
+                return compare;
+            } else {
+                int compare = Integer.compare(h1.wins, h2.wins);
+                if(compare == 0) h1.name.compareTo(h2.name);
+                if(compare == 0) compare = 1;
+                return compare;
+            }
         }
     }
 

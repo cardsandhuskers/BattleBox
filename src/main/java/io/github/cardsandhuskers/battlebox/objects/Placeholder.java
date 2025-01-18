@@ -86,18 +86,18 @@ public class Placeholder extends PlaceholderExpansion {
         // lb pos
         //playerKills_1
         try {
-            /*if (values[0].equalsIgnoreCase("playerKills")) {
-                ArrayList<StatCalculator.SingleGameKillsHolder> killsHolders = plugin.statCalculator.getSGKillsHolders();
+            if (values[0].equalsIgnoreCase("playerplayKills")) {
+                ArrayList<StatCalculator.SingleGameHolder> killsHolders = plugin.statCalculator.getSingleGameHolders(StatCalculator.PlayerStatsComparator.SortType.KILLS);
                 if(Integer.parseInt(values[1]) > killsHolders.size()) return  "";
-                StatCalculator.SingleGameKillsHolder holder = killsHolders.get(Integer.parseInt(values[1]) - 1);
+                StatCalculator.SingleGameHolder holder = killsHolders.get(Integer.parseInt(values[1]) - 1);
 
                 String color = "";
                 if (handler.getPlayerTeam(Bukkit.getPlayer(holder.name)) != null)
                     color = handler.getPlayerTeam(Bukkit.getPlayer(holder.name)).color;
-                return color + holder.name + ChatColor.RESET + " Event " + holder.eventNum + ": " + holder.kills;
+                return color + holder.name + ChatColor.RESET + " Event " + holder.event + ": " + holder.kills;
 
 
-            }*/
+            }
             if (values[0].equalsIgnoreCase("totalKills")) {
                 ArrayList<StatCalculator.PlayerStatsHolder> killsHolders = plugin.statCalculator.getStatsHolders(StatCalculator.PlayerStatsComparator.SortType.KILLS);
                 if(Integer.parseInt(values[1]) > killsHolders.size()) return  "";
