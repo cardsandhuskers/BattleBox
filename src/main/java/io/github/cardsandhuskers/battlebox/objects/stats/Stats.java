@@ -1,4 +1,4 @@
-package io.github.cardsandhuskers.battlebox.objects;
+package io.github.cardsandhuskers.battlebox.objects.stats;
 
 import java.io.PrintWriter;
 import java.nio.file.Files;

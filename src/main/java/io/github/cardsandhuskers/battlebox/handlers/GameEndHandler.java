@@ -5,28 +5,14 @@ import io.github.cardsandhuskers.battlebox.BattleBox.GameState;
 import io.github.cardsandhuskers.battlebox.commands.StartGameCommand;
 import io.github.cardsandhuskers.battlebox.objects.Countdown;
 import io.github.cardsandhuskers.battlebox.objects.GameMessages;
-import io.github.cardsandhuskers.teams.handlers.TeamHandler;
-import io.github.cardsandhuskers.teams.objects.Team;
-import io.github.cardsandhuskers.teams.objects.TempPointsHolder;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVPrinter;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-
 import static io.github.cardsandhuskers.battlebox.BattleBox.*;
-import static io.github.cardsandhuskers.teams.Teams.handler;
-import io.github.cardsandhuskers.battlebox.objects.Stats;
+
+import io.github.cardsandhuskers.battlebox.objects.stats.Stats;
 
 public class GameEndHandler {
     private BattleBox plugin;

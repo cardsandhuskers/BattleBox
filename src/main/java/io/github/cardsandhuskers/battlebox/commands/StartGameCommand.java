@@ -7,9 +7,8 @@ import io.github.cardsandhuskers.battlebox.listeners.*;
 import io.github.cardsandhuskers.battlebox.objects.Countdown;
 import io.github.cardsandhuskers.battlebox.objects.GameMessages;
 import io.github.cardsandhuskers.teams.objects.Team;
-import io.github.cardsandhuskers.battlebox.objects.Stats;
+import io.github.cardsandhuskers.battlebox.objects.stats.Stats;
 
-import org.apache.commons.lang3.StringUtils;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

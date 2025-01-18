@@ -6,12 +6,10 @@ import io.github.cardsandhuskers.battlebox.commands.StartGameCommand;
 import io.github.cardsandhuskers.battlebox.objects.Countdown;
 import io.github.cardsandhuskers.battlebox.objects.GameMessages;
 import io.github.cardsandhuskers.teams.objects.Team;
-import io.github.cardsandhuskers.battlebox.objects.Stats;
+import io.github.cardsandhuskers.battlebox.objects.stats.Stats;
 
-import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;

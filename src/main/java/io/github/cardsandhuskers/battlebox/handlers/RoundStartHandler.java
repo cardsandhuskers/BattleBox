@@ -7,7 +7,7 @@ import io.github.cardsandhuskers.battlebox.objects.Bracket;
 import io.github.cardsandhuskers.battlebox.objects.Countdown;
 import io.github.cardsandhuskers.battlebox.objects.TeamKits;
 import io.github.cardsandhuskers.teams.objects.Team;
-import io.github.cardsandhuskers.battlebox.objects.Stats;
+import io.github.cardsandhuskers.battlebox.objects.stats.Stats;
 
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -15,7 +15,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static io.github.cardsandhuskers.battlebox.BattleBox.*;
 

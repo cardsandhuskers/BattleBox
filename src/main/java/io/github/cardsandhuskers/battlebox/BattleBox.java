@@ -2,7 +2,7 @@ package io.github.cardsandhuskers.battlebox;
 
 import io.github.cardsandhuskers.battlebox.commands.*;
 import io.github.cardsandhuskers.battlebox.objects.Placeholder;
-import io.github.cardsandhuskers.battlebox.objects.StatCalculator;
+import io.github.cardsandhuskers.battlebox.objects.stats.StatCalculator;
 import io.github.cardsandhuskers.battlebox.objects.StoredAttacker;
 import io.github.cardsandhuskers.teams.Teams;
 import io.github.cardsandhuskers.teams.handlers.TeamHandler;

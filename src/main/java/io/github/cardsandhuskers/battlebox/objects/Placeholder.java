@@ -1,6 +1,7 @@
 package io.github.cardsandhuskers.battlebox.objects;
 
 import io.github.cardsandhuskers.battlebox.BattleBox;
+import io.github.cardsandhuskers.battlebox.objects.stats.StatCalculator;
 import io.github.cardsandhuskers.teams.handlers.TeamHandler;
 import io.github.cardsandhuskers.teams.objects.Team;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -85,7 +86,7 @@ public class Placeholder extends PlaceholderExpansion {
         // lb pos
         //playerKills_1
         try {
-            if (values[0].equalsIgnoreCase("playerKills")) {
+            /*if (values[0].equalsIgnoreCase("playerKills")) {
                 ArrayList<StatCalculator.SingleGameKillsHolder> killsHolders = plugin.statCalculator.getSGKillsHolders();
                 if(Integer.parseInt(values[1]) > killsHolders.size()) return  "";
                 StatCalculator.SingleGameKillsHolder holder = killsHolders.get(Integer.parseInt(values[1]) - 1);
@@ -96,7 +97,7 @@ public class Placeholder extends PlaceholderExpansion {
                 return color + holder.name + ChatColor.RESET + " Event " + holder.eventNum + ": " + holder.kills;
 
 
-            }
+            }*/
             if (values[0].equalsIgnoreCase("totalKills")) {
                 ArrayList<StatCalculator.PlayerStatsHolder> killsHolders = plugin.statCalculator.getStatsHolders(StatCalculator.PlayerStatsComparator.SortType.KILLS);
                 if(Integer.parseInt(values[1]) > killsHolders.size()) return  "";
@@ -104,7 +105,7 @@ public class Placeholder extends PlaceholderExpansion {
                 String color = "";
                 if (handler.getPlayerTeam(Bukkit.getPlayer(holder.name)) != null)
                     color = handler.getPlayerTeam(Bukkit.getPlayer(holder.name)).color;
-                return color + holder.name + ChatColor.RESET + ": " + holder.kills;
+                return color + holder.name + ChatColor.RESET + ": " + holder.getTotalKills();
             }
             if (values[0].equalsIgnoreCase("wins")) {
                 ArrayList<StatCalculator.PlayerStatsHolder> killsHolders = plugin.statCalculator.getStatsHolders(StatCalculator.PlayerStatsComparator.SortType.WINS);
@@ -113,7 +114,7 @@ public class Placeholder extends PlaceholderExpansion {
                 String color = "";
                 if (handler.getPlayerTeam(Bukkit.getPlayer(holder.name)) != null)
                     color = handler.getPlayerTeam(Bukkit.getPlayer(holder.name)).color;
-                return color + holder.name + ChatColor.RESET + ": " + holder.wins;
+                return color + holder.name + ChatColor.RESET + ": " + holder.getTotalWins();
             }
             if(values[0].equalsIgnoreCase("yourKills")) {
                 ArrayList<StatCalculator.PlayerStatsHolder> killsHolders = plugin.statCalculator.getStatsHolders(StatCalculator.PlayerStatsComparator.SortType.KILLS);
@@ -133,7 +134,7 @@ public class Placeholder extends PlaceholderExpansion {
                 String color = "";
                 if(team != null) color = team.getColor();
 
-                return i + ". " + color + "You" + ChatColor.RESET + ": " + playerHolder.kills;
+                return i + ". " + color + "You" + ChatColor.RESET + ": " + playerHolder.getTotalKills();
 
             }
             if(values[0].equalsIgnoreCase("yourWins")) {
@@ -154,7 +155,7 @@ public class Placeholder extends PlaceholderExpansion {
                 String color = "";
                 if(team != null) color = team.getColor();
 
-                return i + ". " + color + "You" + ChatColor.RESET + ": " + playerHolder.wins;
+                return i + ". " + color + "You" + ChatColor.RESET + ": " + playerHolder.getTotalWins();
 
             }
 

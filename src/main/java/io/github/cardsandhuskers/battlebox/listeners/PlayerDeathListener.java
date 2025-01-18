@@ -4,14 +4,12 @@ import io.github.cardsandhuskers.battlebox.objects.StoredAttacker;
 import io.github.cardsandhuskers.teams.objects.Team;
 import io.github.cardsandhuskers.battlebox.BattleBox;
 import io.github.cardsandhuskers.battlebox.commands.StartGameCommand;
-import io.github.cardsandhuskers.battlebox.objects.Stats;
+import io.github.cardsandhuskers.battlebox.objects.stats.Stats;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
