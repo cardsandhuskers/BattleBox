@@ -49,9 +49,7 @@ public class StatCalculator {
             List<CSVRecord> recordList = parser.getRecords();
             reader.close();
 
-            System.out.println("EVENT " + event + "\n ----------WINS----------");
             for(CSVRecord r:recordList) {
-                System.out.println(r);
                 if (r.getRecordNumber() == 1) continue;
 
                 String winner = r.get(1);
@@ -81,9 +79,7 @@ public class StatCalculator {
             recordList = parser.getRecords();
             reader.close();
 
-            System.out.println("-----KILLS-----");
             for(CSVRecord r:recordList) {
-                System.out.println(r);
                 if (r.getRecordNumber() == 1) continue;
 
                 String killer = r.get(1);
